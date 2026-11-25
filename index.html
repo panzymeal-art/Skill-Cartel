@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,107 +7,591 @@
   <meta name="theme-color" content="#090909">
   <title>Skill Cartel — Turn Your Skills Into Opportunity</title>
   <meta name="description" content="Discover your skills, build an offer, and create a practical business blueprint with Skill Cartel AI.">
-  <style>
-    :root{--bg:#090909;--panel:#111;--panel2:#171717;--line:#292929;--gold:#d8b56a;--gold2:#f0d79b;--muted:#a7a7a7;--white:#f6f4ef;--green:#75c99a}
-    *{box-sizing:border-box} body{margin:0;background:radial-gradient(ellipse at 50% -15%,#332817 0%,#111 34%,var(--bg) 70%);color:var(--white);font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Arial}
-    button,input{font:inherit} button{cursor:pointer}
-    .wrap{max-width:1120px;margin:auto;padding:24px 20px 40px}
-    header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:8px 0 28px;border-bottom:1px solid var(--line)}
-    .brand{display:flex;align-items:center;gap:12px}.mark{width:42px;height:42px;border:1px solid var(--gold);border-radius:12px;display:grid;place-items:center;color:var(--gold);font-weight:800;letter-spacing:-2px}
-    .brand strong{display:block;letter-spacing:2px;font-size:14px}.brand small{color:var(--muted);font-size:10px;letter-spacing:1.5px}
-    .status{font-size:12px;color:var(--green);border:1px solid #294c38;border-radius:30px;padding:6px 10px}
-    .hero{text-align:center;padding:48px 12px 34px}.eyebrow{color:var(--gold);letter-spacing:3px;text-transform:uppercase;font-size:11px;font-weight:700}
-    h1{font-size:clamp(34px,6vw,62px);line-height:1.05;letter-spacing:-2px;margin:14px 0}.gold{color:var(--gold2)}
-    .hero p{max-width:650px;margin:0 auto;color:#b8b5ae;font-size:16px}
-    .layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:18px;align-items:start}
-    .side,.chat{background:rgba(17,17,17,.94);border:1px solid var(--line);border-radius:18px}
-    .side{padding:20px}.side h2{font-size:13px;letter-spacing:1.5px;margin:0 0 14px;color:var(--gold)}
-    .step{display:flex;gap:11px;margin:15px 0;color:#ddd;font-size:13px}.num{flex:none;width:25px;height:25px;border:1px solid #51452e;border-radius:8px;display:grid;place-items:center;color:var(--gold);font-size:11px}
-    .side-note{border-top:1px solid var(--line);margin-top:20px;padding-top:16px;color:var(--muted);font-size:12px}
-    .chat{overflow:hidden;min-height:640px;display:flex;flex-direction:column}
-    .chat-head{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px}
-    .chat-head strong{font-size:14px}.chat-head small{display:block;color:var(--muted);font-size:11px}
-    .actions{display:flex;gap:8px;flex-wrap:wrap}.ghost,.chip{background:#171717;border:1px solid #39352c;color:#ddd;border-radius:9px;padding:8px 10px;font-size:11px}
-    .ghost:hover,.chip:hover{border-color:var(--gold);color:var(--gold2)}
-    #messages{padding:20px;display:flex;flex-direction:column;gap:14px;flex:1;max-height:540px;overflow:auto}
-    .msg{max-width:88%;padding:12px 14px;border-radius:14px;font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere}
-    .bot{align-self:flex-start;background:#1b1a17;border:1px solid #3a3325;color:#f0eee8;border-bottom-left-radius:4px}
-    .user{align-self:flex-end;background:#332a1b;border:1px solid #6b542d;color:#fff4dc;border-bottom-right-radius:4px}
-    .typing{color:var(--muted);font-size:12px;padding:0 20px 12px}
-    .chips{padding:0 18px 14px;display:flex;gap:8px;flex-wrap:wrap}
-    .composer{padding:14px;border-top:1px solid var(--line);display:flex;gap:10px;background:#0e0e0e}
-    #prompt{min-width:0;flex:1;background:#191919;border:1px solid #393939;border-radius:12px;padding:13px;color:white;outline:none}
-    #prompt:focus{border-color:var(--gold)} #send{background:linear-gradient(135deg,#e8ce91,#b58a3f);color:#17120a;border:0;border-radius:12px;padding:0 20px;font-weight:800}
-    .foot{color:#777;text-align:center;font-size:11px;margin:22px auto 0;max-width:850px}
-    .error{color:#ffb4a9}.hidden{display:none}
 
-    .hidden{display:none!important}
-    .auth-screen{min-height:100vh;display:grid;place-items:center;padding:28px 16px;background:radial-gradient(ellipse at 50% -15%,#332817 0%,#111 38%,#090909 75%)}
-    .auth-card{width:min(100%,470px);padding:30px;background:#111;border:1px solid #302b22;border-radius:20px;box-shadow:0 22px 70px #0008}
-    .auth-brand{margin-bottom:30px}.auth-intro{text-align:center;margin-bottom:24px}.auth-intro h1{font-size:36px;line-height:1.08;letter-spacing:-1.5px;margin:12px 0}.auth-intro p{color:#b8b5ae;font-size:14px}
-    .auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:5px;background:#191919;border:1px solid #333;border-radius:12px;margin:22px 0}
-    .auth-tab{border:0;border-radius:9px;background:transparent;color:#aaa;padding:10px;font-weight:650}.auth-tab.active{background:#302719;color:#f2d99e}
-    .auth-form{display:grid;gap:9px}.auth-form label{font-size:12px;color:#d7d0c2;margin-top:5px}.auth-form input{width:100%;background:#191919;border:1px solid #393939;border-radius:10px;padding:13px;color:#fff;outline:none}.auth-form input:focus{border-color:var(--gold)}
-    .auth-primary,.guest-button{width:100%;border-radius:10px;padding:13px;font-weight:750;margin-top:10px}.auth-primary{background:linear-gradient(135deg,#e8ce91,#b58a3f);color:#17120a;border:0}.guest-button{background:#171717;border:1px solid #51452e;color:#f0d79b}.auth-message{min-height:20px;margin-top:12px;color:#f0d79b;font-size:12px;white-space:pre-wrap}.auth-divider{display:flex;align-items:center;gap:12px;color:#777;font-size:10px;margin:18px 0 6px}.auth-divider:before,.auth-divider:after{content:"";height:1px;background:#333;flex:1}.auth-terms{font-size:10px;color:#777;line-height:1.5;text-align:center;margin:20px 0 0}.account-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;justify-content:flex-end}.account-label{font-size:11px;color:#aaa;max-width:160px;overflow:hidden;text-overflow:ellipsis}
-    @media(max-width:760px){.composer{flex-wrap:wrap}.composer #prompt{flex-basis:65%}.layout{grid-template-columns:1fr}.side{order:2}.chat{min-height:620px}.hero{padding:36px 4px 26px}.wrap{padding:16px 12px 30px}header{padding-bottom:18px}}
+  <style>
+    :root {
+      --bg: #090909;
+      --panel: #111;
+      --panel2: #171717;
+      --line: #292929;
+      --gold: #d8b56a;
+      --gold2: #f0d79b;
+      --muted: #a7a7a7;
+      --white: #f6f4ef;
+      --green: #75c99a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(ellipse at 50% -15%, #332817 0%, #111 34%, var(--bg) 70%);
+      color: var(--white);
+      font: 15px/1.55 Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Arial;
+    }
+
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+
+    .wrap {
+      max-width: 1120px;
+      margin: auto;
+      padding: 24px 20px 40px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 8px 0 28px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mark {
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--gold);
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      color: var(--gold);
+      font-weight: 800;
+      letter-spacing: -2px;
+    }
+
+    .brand strong {
+      display: block;
+      letter-spacing: 2px;
+      font-size: 14px;
+    }
+
+    .brand small {
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 1.5px;
+    }
+
+    .status {
+      font-size: 12px;
+      color: var(--green);
+      border: 1px solid #294c38;
+      border-radius: 30px;
+      padding: 6px 10px;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 48px 12px 34px;
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: clamp(34px, 6vw, 62px);
+      line-height: 1.05;
+      letter-spacing: -2px;
+      margin: 14px 0;
+    }
+
+    .gold { color: var(--gold2); }
+
+    .hero p {
+      max-width: 650px;
+      margin: 0 auto;
+      color: #b8b5ae;
+      font-size: 16px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 270px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .side, .chat {
+      background: rgba(17,17,17,.94);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+    }
+
+    .side { padding: 20px; }
+
+    .side h2 {
+      font-size: 13px;
+      letter-spacing: 1.5px;
+      margin: 0 0 14px;
+      color: var(--gold);
+    }
+
+    .step {
+      display: flex;
+      gap: 11px;
+      margin: 15px 0;
+      color: #ddd;
+      font-size: 13px;
+    }
+
+    .num {
+      flex: none;
+      width: 25px;
+      height: 25px;
+      border: 1px solid #51452e;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: var(--gold);
+      font-size: 11px;
+    }
+
+    .side-note {
+      border-top: 1px solid var(--line);
+      margin-top: 20px;
+      padding-top: 16px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .chat {
+      overflow: hidden;
+      min-height: 640px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-head {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .chat-head strong { font-size: 14px; }
+
+    .chat-head small {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .ghost, .chip {
+      background: #171717;
+      border: 1px solid #39352c;
+      color: #ddd;
+      border-radius: 9px;
+      padding: 8px 10px;
+      font-size: 11px;
+    }
+
+    .ghost:hover, .chip:hover {
+      border-color: var(--gold);
+      color: var(--gold2);
+    }
+
+    button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    #messages {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      flex: 1;
+      max-height: 540px;
+      overflow: auto;
+    }
+
+    .msg {
+      max-width: 88%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-size: 14px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .bot {
+      align-self: flex-start;
+      background: #1b1a17;
+      border: 1px solid #3a3325;
+      color: #f0eee8;
+      border-bottom-left-radius: 4px;
+    }
+
+    .user {
+      align-self: flex-end;
+      background: #332a1b;
+      border: 1px solid #6b542d;
+      color: #fff4dc;
+      border-bottom-right-radius: 4px;
+    }
+
+    .typing {
+      color: var(--muted);
+      font-size: 12px;
+      padding: 0 20px 12px;
+    }
+
+    .chips {
+      padding: 0 18px 14px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .composer {
+      padding: 14px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      gap: 10px;
+      background: #0e0e0e;
+    }
+
+    #prompt {
+      min-width: 0;
+      flex: 1;
+      background: #191919;
+      border: 1px solid #393939;
+      border-radius: 12px;
+      padding: 13px;
+      color: white;
+      outline: none;
+    }
+
+    #prompt:focus { border-color: var(--gold); }
+
+    #send {
+      background: linear-gradient(135deg, #e8ce91, #b58a3f);
+      color: #17120a;
+      border: 0;
+      border-radius: 12px;
+      padding: 0 20px;
+      font-weight: 800;
+    }
+
+    .foot {
+      color: #777;
+      text-align: center;
+      font-size: 11px;
+      margin: 22px auto 0;
+      max-width: 850px;
+    }
+
+    .hidden { display: none !important; }
+
+    .auth-screen {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 28px 16px;
+      background: radial-gradient(ellipse at 50% -15%, #332817 0%, #111 38%, #090909 75%);
+    }
+
+    .auth-card {
+      width: min(100%, 470px);
+      padding: 30px;
+      background: #111;
+      border: 1px solid #302b22;
+      border-radius: 20px;
+      box-shadow: 0 22px 70px #0008;
+    }
+
+    .auth-brand { margin-bottom: 30px; }
+
+    .auth-intro {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .auth-intro h1 {
+      font-size: 36px;
+      line-height: 1.08;
+      letter-spacing: -1.5px;
+      margin: 12px 0;
+    }
+
+    .auth-intro p {
+      color: #b8b5ae;
+      font-size: 14px;
+    }
+
+    .auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      padding: 5px;
+      background: #191919;
+      border: 1px solid #333;
+      border-radius: 12px;
+      margin: 22px 0;
+    }
+
+    .auth-tab {
+      border: 0;
+      border-radius: 9px;
+      background: transparent;
+      color: #aaa;
+      padding: 10px;
+      font-weight: 650;
+    }
+
+    .auth-tab.active {
+      background: #302719;
+      color: #f2d99e;
+    }
+
+    .auth-form { display: grid; gap: 9px; }
+
+    .auth-form label {
+      font-size: 12px;
+      color: #d7d0c2;
+      margin-top: 5px;
+    }
+
+    .auth-form input {
+      width: 100%;
+      background: #191919;
+      border: 1px solid #393939;
+      border-radius: 10px;
+      padding: 13px;
+      color: #fff;
+      outline: none;
+    }
+
+    .auth-form input:focus { border-color: var(--gold); }
+
+    .auth-primary, .guest-button {
+      width: 100%;
+      border-radius: 10px;
+      padding: 13px;
+      font-weight: 750;
+      margin-top: 10px;
+    }
+
+    .auth-primary {
+      background: linear-gradient(135deg, #e8ce91, #b58a3f);
+      color: #17120a;
+      border: 0;
+    }
+
+    .guest-button {
+      background: #171717;
+      border: 1px solid #51452e;
+      color: #f0d79b;
+    }
+
+    .auth-message {
+      min-height: 20px;
+      margin-top: 12px;
+      color: #f0d79b;
+      font-size: 12px;
+      white-space: pre-wrap;
+    }
+
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #777;
+      font-size: 10px;
+      margin: 18px 0 6px;
+    }
+
+    .auth-divider:before, .auth-divider:after {
+      content: "";
+      height: 1px;
+      background: #333;
+      flex: 1;
+    }
+
+    .auth-terms {
+      font-size: 10px;
+      color: #777;
+      line-height: 1.5;
+      text-align: center;
+      margin: 20px 0 0;
+    }
+
+    .account-actions {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .account-label {
+      font-size: 11px;
+      color: #aaa;
+      max-width: 160px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    @media(max-width:760px) {
+      .composer { flex-wrap: wrap; }
+      .composer #prompt { flex-basis: 65%; }
+      .layout { grid-template-columns: 1fr; }
+      .side { order: 2; }
+      .chat { min-height: 620px; }
+      .hero { padding: 36px 4px 26px; }
+      .wrap { padding: 16px 12px 30px; }
+      header { padding-bottom: 18px; }
+    }
   </style>
 </head>
+
 <body>
+
 <section id="authScreen" class="auth-screen">
   <div class="auth-card">
-    <div class="brand auth-brand"><div class="mark">SC</div><div><strong>SKILL CARTEL</strong><small>SKILLS → OPPORTUNITY</small></div></div>
+
+    <div class="brand auth-brand">
+      <div class="mark">SC</div>
+      <div>
+        <strong>SKILL CARTEL</strong>
+        <small>SKILLS → OPPORTUNITY</small>
+      </div>
+    </div>
+
     <div class="auth-intro">
       <div class="eyebrow">Your skills have value</div>
       <h1>Build something<br><span class="gold">with what you know.</span></h1>
       <p>Create an account to keep your progress, or explore as a guest.</p>
     </div>
+
     <div class="auth-tabs">
       <button type="button" id="showSignup" class="auth-tab active">Create account</button>
       <button type="button" id="showLogin" class="auth-tab">Sign in</button>
     </div>
+
     <form id="authForm" class="auth-form">
       <label for="authEmail">Email address</label>
       <input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com" required>
+
       <label for="authPassword">Password</label>
       <input id="authPassword" type="password" autocomplete="new-password" minlength="8" placeholder="At least 8 characters" required>
+
       <button id="authSubmit" class="auth-primary" type="submit">Create account</button>
     </form>
+
     <div id="authMessage" class="auth-message" aria-live="polite"></div>
+
     <div class="auth-divider"><span>OR</span></div>
+
     <button type="button" id="guestBtn" class="guest-button">Continue as Guest</button>
-    <p class="auth-terms">By continuing, you agree to use Skill Cartel responsibly. Never share passwords, payment details, or sensitive personal information in chat.</p>
+
+    <p class="auth-terms">
+      By continuing, you agree to use Skill Cartel responsibly.
+      Never share passwords, payment details, or sensitive personal information in chat.
+    </p>
+
   </div>
 </section>
+
 <div class="wrap hidden" id="appWrap">
+
   <header>
-    <div class="brand"><div class="mark">SC</div><div><strong>SKILL CARTEL</strong><small>SKILLS → OPPORTUNITY</small></div></div>
-    <div class="account-actions"><span class="status">● AI EXPERIENCE</span><span id="accountLabel" class="account-label"></span><button class="ghost" id="accountAction" type="button">Sign out</button></div>
+    <div class="brand">
+      <div class="mark">SC</div>
+      <div>
+        <strong>SKILL CARTEL</strong>
+        <small>SKILLS → OPPORTUNITY</small>
+      </div>
+    </div>
+
+    <div class="account-actions">
+      <span class="status">● AI EXPERIENCE</span>
+      <span id="accountLabel" class="account-label"></span>
+      <button class="ghost" id="accountAction" type="button">Sign out</button>
+    </div>
   </header>
+
   <section class="hero">
     <div class="eyebrow">Your skills have value</div>
     <h1>Turn what you know into<br><span class="gold">what you can build.</span></h1>
-    <p>Discover your strengths, identify a real customer problem, and create a practical offer with your AI business-building assistant.</p>
+    <p>
+      Discover your strengths, identify a real customer problem,
+      and create a practical offer with your AI business-building assistant.
+    </p>
   </section>
+
   <main class="layout">
+
     <aside class="side">
       <h2>YOUR JOURNEY</h2>
-      <div class="step"><span class="num">01</span><span><b>Discover</b><br>Identify your genuine skills.</span></div>
-      <div class="step"><span class="num">02</span><span><b>Analyze</b><br>Explore realistic opportunities.</span></div>
-      <div class="step"><span class="num">03</span><span><b>Build</b><br>Create an offer and pricing.</span></div>
-      <div class="step"><span class="num">04</span><span><b>Sell</b><br>Plan outreach and delivery.</span></div>
-      <div class="step"><span class="num">05</span><span><b>Improve</b><br>Review results in Sell Mode.</span></div>
-      <div class="side-note"><b>Start with what you have.</b><br>Skill Cartel helps you plan and test an idea. It does not guarantee customers, income, or business success.</div>
+
+      <div class="step">
+        <span class="num">01</span>
+        <span><b>Discover</b><br>Identify your genuine skills.</span>
+      </div>
+
+      <div class="step">
+        <span class="num">02</span>
+        <span><b>Analyze</b><br>Explore realistic opportunities.</span>
+      </div>
+
+      <div class="step">
+        <span class="num">03</span>
+        <span><b>Build</b><br>Create an offer and pricing.</span>
+      </div>
+
+      <div class="step">
+        <span class="num">04</span>
+        <span><b>Sell</b><br>Plan outreach and delivery.</span>
+      </div>
+
+      <div class="step">
+        <span class="num">05</span>
+        <span><b>Improve</b><br>Review results in Sell Mode.</span>
+      </div>
+
+      <div class="side-note">
+        <b>Start with what you have.</b><br>
+        Skill Cartel helps you plan and test an idea.
+        It does not guarantee customers, income, or business success.
+      </div>
     </aside>
+
     <section class="chat">
+
       <div class="chat-head">
-        <div><strong>Skill Cartel AI</strong><small>Business discovery assistant</small></div>
+        <div>
+          <strong>Skill Cartel AI</strong>
+          <small>Business discovery assistant</small>
+        </div>
+
         <div class="actions">
           <button class="ghost" id="exportBtn" title="Download this conversation">Export</button>
           <button class="ghost" id="clearBtn" title="Clear this conversation">New chat</button>
         </div>
       </div>
+
       <div id="messages" aria-live="polite">
-        <div class="msg bot">Welcome to Skill Cartel. 👋
+        <div class="msg bot">Welcome to Skill Cartel.
 
 You may have a valuable business opportunity hiding inside something you already know how to do.
 
@@ -114,7 +599,9 @@ I'll ask one question at a time, understand your real abilities, and help you ex
 
 To begin: what skill, activity, or type of problem-solving do people already come to you for?</div>
       </div>
+
       <div id="typing" class="typing hidden">Skill Cartel is thinking…</div>
+
       <div class="chips">
         <button class="chip" data-text="START">START</button>
         <button class="chip" data-text="ANALYZE">ANALYZE</button>
@@ -123,25 +610,54 @@ To begin: what skill, activity, or type of problem-solving do people already com
         <button class="chip" data-text="GENERATE MY BLUEPRINT">GENERATE MY BLUEPRINT</button>
         <button class="chip" data-text="SELL MODE">SELL MODE</button>
       </div>
+
       <form class="composer" id="chatForm">
-        <input id="fileInput" type="file" accept=".txt,.md,.csv,.json,text/plain,text/markdown,text/csv,application/json" class="hidden">
+        <input
+          id="fileInput"
+          type="file"
+          accept=".txt,.md,.csv,.json,text/plain,text/markdown,text/csv,application/json"
+          class="hidden"
+        >
+
         <button class="ghost" id="attachBtn" type="button" title="Attach a text file">＋ File</button>
-        <input id="prompt" maxlength="4000" autocomplete="off" placeholder="Tell Skill Cartel about your skills…" aria-label="Message Skill Cartel">
+
+        <input
+          id="prompt"
+          maxlength="4000"
+          autocomplete="off"
+          placeholder="Tell Skill Cartel about your skills..."
+          aria-label="Message Skill Cartel"
+        >
+
         <button id="send" type="submit">Send</button>
       </form>
+
       <div id="fileStatus" style="padding:0 16px 12px;color:#a7a7a7;font-size:12px;background:#0e0e0e"></div>
+
     </section>
   </main>
-  <p class="foot">Prototype v1.0 · Avoid sharing passwords, payment details, identity documents, or confidential business information. AI responses can be inaccurate; verify important decisions.</p>
+
+  <p class="foot">
+    Prototype v1.0 · Avoid sharing passwords, payment details, identity documents,
+    or confidential business information. AI responses can be inaccurate;
+    verify important decisions.
+  </p>
+
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-  // Add your Supabase Project URL and Publishable Key below. Never use a Secret key here.
+  // SUPABASE CONFIGURATION
   const SUPABASE_URL = "https://gssguxwskyvmoppnuowk.supabase.co";
+
   const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_4_IlB-g6jPafJKCb9c4lug_kBefbYwN";
-  // Your deployed Cloudflare Worker URL.
+
+  // CLOUDFLARE WORKER URL
   const API_URL = "https://skill-cartel-api.panzymeal.workers.dev/";
+
   const STORAGE_KEY = "skill-cartel-chat-v2";
+
   const messagesEl = document.getElementById("messages");
   const form = document.getElementById("chatForm");
   const input = document.getElementById("prompt");
@@ -150,12 +666,14 @@ To begin: what skill, activity, or type of problem-solving do people already com
   const fileInput = document.getElementById("fileInput");
   const attachBtn = document.getElementById("attachBtn");
   const fileStatus = document.getElementById("fileStatus");
+
   let history = [];
   let selectedFile = null;
   let supabaseClient = null;
   let currentUser = null;
   let conversationId = null;
   let authMode = "signup";
+
   const authScreen = document.getElementById("authScreen");
   const appWrap = document.getElementById("appWrap");
   const authMessage = document.getElementById("authMessage");
@@ -167,14 +685,21 @@ To begin: what skill, activity, or type of problem-solving do people already com
     authMessage.textContent = message;
     authMessage.style.color = isError ? "#ffb4a9" : "#f0d79b";
   }
+
   function setAuthMode(mode) {
     authMode = mode;
+
     document.getElementById("showSignup").classList.toggle("active", mode === "signup");
     document.getElementById("showLogin").classList.toggle("active", mode === "login");
+
     authSubmit.textContent = mode === "signup" ? "Create account" : "Sign in";
-    document.getElementById("authPassword").autocomplete = mode === "signup" ? "new-password" : "current-password";
+
+    document.getElementById("authPassword").autocomplete =
+      mode === "signup" ? "new-password" : "current-password";
+
     setAuthMessage("");
   }
+
   document.getElementById("showSignup").addEventListener("click", () => setAuthMode("signup"));
   document.getElementById("showLogin").addEventListener("click", () => setAuthMode("login"));
 
@@ -182,6 +707,7 @@ To begin: what skill, activity, or type of problem-solving do people already com
     history = [];
     conversationId = null;
     messagesEl.innerHTML = "";
+
     const { data, error } = await supabaseClient
       .from("conversations")
       .select("id,messages")
@@ -189,124 +715,226 @@ To begin: what skill, activity, or type of problem-solving do people already com
       .order("updated_at", { ascending: false })
       .limit(1)
       .maybeSingle();
+
     if (error) {
       console.error("Conversation load error:", error);
-      render("model", "Welcome to Skill Cartel. Your chat is ready. Conversation syncing is not available right now.");
+
+      render(
+        "model",
+        "Welcome to Skill Cartel. Your chat is ready. Conversation syncing is not available right now."
+      );
+
       return;
     }
+
     if (data && Array.isArray(data.messages)) {
       conversationId = data.id;
-      history = data.messages.filter(m => m && ["user", "model"].includes(m.role) && typeof m.text === "string").slice(-20);
-      history.forEach(m => render(m.role === "user" ? "user" : "model", m.text));
+
+      history = data.messages
+        .filter(m =>
+          m &&
+          ["user", "model"].includes(m.role) &&
+          typeof m.text === "string"
+        )
+        .slice(-20);
+
+      history.forEach(m => {
+        render(m.role === "user" ? "user" : "model", m.text);
+      });
+
     } else {
-      render("model", "Welcome to Skill Cartel. 👋\n\nYou may have a valuable business opportunity hiding inside something you already know how to do.\n\nI'll ask one question at a time, understand your real abilities, and help you explore a practical offer.\n\nTo begin: what skill, activity, or type of problem-solving do people already come to you for?");
+      render(
+        "model",
+        "Welcome to Skill Cartel. You may have a valuable business opportunity hiding inside something you already know how to do.\n\nI'll ask one question at a time, understand your real abilities, and help you explore a practical offer.\n\nTo begin: what skill, activity, or type of problem-solving do people already come to you for?"
+      );
     }
   }
+
   async function saveConversation() {
-    try { localStorage.setItem(STORAGE_KEY + "-" + currentUser.id, JSON.stringify(history)); } catch (_) {}
     if (!currentUser || !history.length) return;
-    const firstUserMessage = history.find(m => m.role === "user")?.text || "New Skill Cartel conversation";
+
+    try {
+      localStorage.setItem(
+        STORAGE_KEY + "-" + currentUser.id,
+        JSON.stringify(history)
+      );
+    } catch (_) {}
+
+    const firstUserMessage =
+      history.find(m => m.role === "user")?.text ||
+      "New Skill Cartel conversation";
+
     const payload = {
       user_id: currentUser.id,
       title: firstUserMessage.replace(/\s+/g, " ").slice(0, 90),
       messages: history,
       updated_at: new Date().toISOString()
     };
+
     let result;
+
     if (conversationId) {
-      result = await supabaseClient.from("conversations").update(payload).eq("id", conversationId).select("id").single();
+      result = await supabaseClient
+        .from("conversations")
+        .update(payload)
+        .eq("id", conversationId)
+        .select("id")
+        .single();
+
     } else {
-      result = await supabaseClient.from("conversations").insert(payload).select("id").single();
+      result = await supabaseClient
+        .from("conversations")
+        .insert(payload)
+        .select("id")
+        .single();
     }
+
     if (result.error) {
       console.error("Conversation save error:", result.error);
-      fileStatus.textContent = "Your chat is working, but cloud saving failed. Please check the Supabase table and policies.";
+
+      fileStatus.textContent =
+        "Your chat is working, but cloud saving failed. Please check the Supabase table and policies.";
+
     } else if (!conversationId) {
       conversationId = result.data.id;
     }
   }
+
   async function enterApp(session) {
+    if (!session || !session.user) {
+      throw new Error("A valid login session was not returned.");
+    }
+
     currentUser = session.user;
+
     authScreen.classList.add("hidden");
     appWrap.classList.remove("hidden");
+
     const isGuest = !!currentUser.is_anonymous;
-    document.getElementById("accountLabel").textContent = isGuest ? "Guest session" : (currentUser.email || "Account");
-    accountAction.textContent = isGuest ? "Sign out" : "Sign out";
+
+    document.getElementById("accountLabel").textContent =
+      isGuest ? "Guest session" : (currentUser.email || "Account");
+
+    accountAction.textContent = "Sign out";
+
     await loadSavedConversation();
   }
 
+  // SIGN UP AND SIGN IN
   authForm.addEventListener("submit", async (event) => {
     event.preventDefault();
+
     const email = document.getElementById("authEmail").value.trim();
     const password = document.getElementById("authPassword").value;
+
     authSubmit.disabled = true;
     authSubmit.textContent = "Please wait…";
+
     setAuthMessage("");
+
     try {
       if (authMode === "signup") {
-        const { data, error } = await supabaseClient.auth.signUp({ email, password });
+        const { data, error } = await supabaseClient.auth.signUp({
+          email,
+          password
+        });
+
         if (error) throw error;
-        if (data.session) await enterApp(data.session);
-        else setAuthMessage("Account created. Check your email for the confirmation link, then return here and sign in.");
+
+        if (data.session) {
+          await enterApp(data.session);
+        } else {
+          setAuthMode("login");
+
+          setAuthMessage(
+            "Account created. Check your email for the confirmation link, then return here and sign in."
+          );
+        }
+
       } else {
-        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+          email,
+          password
+        });
+
         if (error) throw error;
+
         await enterApp(data.session);
       }
+
     } catch (error) {
-      setAuthMessage(error.message || "Authentication failed. Please try again.", true);
+      setAuthMessage(
+        error.message || "Authentication failed. Please try again.",
+        true
+      );
+
     } finally {
       authSubmit.disabled = false;
-      authSubmit.textContent = authMode === "signup" ? "Create account" : "Sign in";
+      authSubmit.textContent =
+        authMode === "signup" ? "Create account" : "Sign in";
     }
   });
 
+  // GUEST SIGN IN
   document.getElementById("guestBtn").addEventListener("click", async () => {
     const guestBtn = document.getElementById("guestBtn");
+
     guestBtn.disabled = true;
     guestBtn.textContent = "Starting guest session…";
+
     setAuthMessage("");
+
     try {
-      const { data, error } = await supabaseClient.auth.signInAnonymously();
+      const { data, error } =
+        await supabaseClient.auth.signInAnonymously();
+
       if (error) throw error;
+
       await enterApp(data.session);
+
     } catch (error) {
-      setAuthMessage(error.message || "Guest access could not start. Check that anonymous sign-ins are enabled in Supabase.", true);
+      setAuthMessage(
+        error.message ||
+        "Guest access could not start. Check that anonymous sign-ins are enabled in Supabase.",
+        true
+      );
+
     } finally {
       guestBtn.disabled = false;
       guestBtn.textContent = "Continue as Guest";
     }
   });
+
+  // SIGN OUT
   accountAction.addEventListener("click", async () => {
     if (!confirm("Sign out of Skill Cartel on this device?")) return;
+
     await supabaseClient.auth.signOut();
+
     currentUser = null;
     conversationId = null;
     history = [];
+
     appWrap.classList.add("hidden");
     authScreen.classList.remove("hidden");
+
     setAuthMessage("You have signed out.");
   });
 
   function render(role, text) {
     const div = document.createElement("div");
+
     div.className = "msg " + (role === "user" ? "user" : "bot");
     div.textContent = text;
+
     messagesEl.appendChild(div);
     messagesEl.scrollTop = messagesEl.scrollHeight;
   }
+
   async function save() {
     await saveConversation();
   }
-  function restore() {
-    try {
-      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-      if (Array.isArray(saved)) {
-        history = saved.filter(m => m && ["user","model"].includes(m.role) && typeof m.text === "string").slice(-20);
-        history.forEach(m => render(m.role === "user" ? "user" : "model", m.text));
-      }
-    } catch (_) { history = []; }
-  }
+
   function setBusy(value) {
     typing.classList.toggle("hidden", !value);
     send.disabled = value;
@@ -314,135 +942,310 @@ To begin: what skill, activity, or type of problem-solving do people already com
     send.textContent = value ? "…" : "Send";
   }
 
+  // FILE ATTACHMENTS
   attachBtn.addEventListener("click", () => fileInput.click());
+
   fileInput.addEventListener("change", () => {
     const file = fileInput.files && fileInput.files[0];
+
     if (!file) return;
+
     const allowed = /\.(txt|md|csv|json)$/i.test(file.name);
+
     if (!allowed) {
       alert("For now, attach TXT, MD, CSV, or JSON files. PDF and Word files are not supported in this version.");
+
       fileInput.value = "";
       selectedFile = null;
       fileStatus.textContent = "";
+
       return;
     }
+
     if (file.size > 1024 * 1024) {
       alert("Please choose a file smaller than 1 MB.");
+
       fileInput.value = "";
       selectedFile = null;
       fileStatus.textContent = "";
+
       return;
     }
+
     selectedFile = file;
-    fileStatus.textContent = "📎 Ready to attach: " + file.name + " (maximum 1 MB)";
+
+    fileStatus.textContent =
+      "Ready to attach: " + file.name + " (maximum 1 MB)";
   });
 
+  // SEND MESSAGE TO CLOUDFLARE
   async function sendMessage(text) {
     const clean = text.trim();
+
     if ((!clean && !selectedFile) || send.disabled) return;
+
+    if (!supabaseClient) {
+      render("model", "Authentication service is not ready. Please refresh and sign in again.");
+      return;
+    }
 
     let attachmentText = "";
     let attachmentName = "";
+
     if (selectedFile) {
       try {
         attachmentText = await selectedFile.text();
         attachmentName = selectedFile.name;
+
       } catch (_) {
-        render("model", "I couldn't read that file. Please try a plain-text TXT, MD, CSV, or JSON file.");
+        render(
+          "model",
+          "I couldn't read that file. Please try a plain-text TXT, MD, CSV, or JSON file."
+        );
         return;
       }
+
       if (!attachmentText.trim()) {
         render("model", "That file appears to be empty.");
         return;
       }
+
       attachmentText = attachmentText.slice(0, 10000);
     }
 
-    const visibleText = clean + (attachmentName ? (clean ? "\n\n" : "") + "📎 Attached: " + attachmentName : "");
-    const messageContent = clean +
-      (attachmentName ? "\n\n[Attached file: " + attachmentName + "]\n" + attachmentText : "");
-    render("user", visibleText || "📎 Attached: " + attachmentName);
-    history.push({role:"user", text:messageContent});
+    const visibleText =
+      clean +
+      (attachmentName
+        ? (clean ? "\n\n" : "") + "Attached: " + attachmentName
+        : "");
+
+    const messageContent =
+      clean +
+      (attachmentName
+        ? "\n\n[Attached file: " + attachmentName + "]\n" + attachmentText
+        : "");
+
+    render("user", visibleText || "Attached: " + attachmentName);
+
+    history.push({
+      role: "user",
+      text: messageContent
+    });
+
     history = history.slice(-20);
+
     await save();
+
     input.value = "";
     selectedFile = null;
     fileInput.value = "";
     fileStatus.textContent = "";
+
     setBusy(true);
 
     try {
+      // IMPORTANT FIX:
+      // Retrieve the active Supabase session before calling Cloudflare.
+      const { data: sessionData, error: sessionError } =
+        await supabaseClient.auth.getSession();
+
+      if (sessionError) {
+        throw new Error(
+          "Could not verify your login: " + sessionError.message
+        );
+      }
+
+      const session = sessionData.session;
+
+      if (!session || !session.access_token) {
+        throw new Error(
+          "Your login session has expired. Please sign in again."
+        );
+      }
+
+      // Send the Supabase access token to Cloudflare.
       const response = await fetch(API_URL, {
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + session.access_token
+        },
+
+        body: JSON.stringify({
           messages: history.map(m => ({
             role: m.role === "user" ? "user" : "assistant",
             content: m.text
           }))
         })
       });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Request failed. Please try again.");
+
+      let data;
+
+      try {
+        data = await response.json();
+      } catch (_) {
+        throw new Error(
+          "Cloudflare returned an invalid response. Check your Worker deployment."
+        );
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          data.error || "Request failed. Please try again."
+        );
+      }
+
       const answer = (data.reply || "").trim();
-      if (!answer) throw new Error("The AI returned an empty response.");
+
+      if (!answer) {
+        throw new Error("The AI returned an empty response.");
+      }
+
       render("model", answer);
-      history.push({role:"model", text:answer});
+
+      history.push({
+        role: "model",
+        text: answer
+      });
+
       history = history.slice(-20);
+
       await save();
+
     } catch (err) {
-      render("model", "I couldn't complete that request: " + err.message +
-        "\n\nPlease try again. If this keeps happening, start a new chat.");
+      console.error("Skill Cartel request error:", err);
+
+      render(
+        "model",
+        "I couldn't complete that request: " +
+        err.message +
+        "\n\nPlease try again. If this keeps happening, start a new chat."
+      );
+
     } finally {
       setBusy(false);
       input.focus();
     }
   }
 
-  form.addEventListener("submit", e => {
-    e.preventDefault();
+  // CHAT FORM
+  form.addEventListener("submit", event => {
+    event.preventDefault();
     sendMessage(input.value);
   });
-  document.querySelectorAll(".chip").forEach(b =>
-    b.addEventListener("click", () => sendMessage(b.dataset.text))
-  );
+
+  // QUICK COMMAND BUTTONS
+  document.querySelectorAll(".chip").forEach(button => {
+    button.addEventListener("click", () => {
+      sendMessage(button.dataset.text);
+    });
+  });
+
+  // NEW CHAT
   document.getElementById("clearBtn").addEventListener("click", () => {
-    if (!confirm("Start a new conversation? This clears the chat saved in this browser.")) return;
+    if (!confirm("Start a new conversation? This clears the chat saved in this browser.")) {
+      return;
+    }
+
     history = [];
-    if (currentUser) localStorage.removeItem(STORAGE_KEY + "-" + currentUser.id);
+
+    if (currentUser) {
+      localStorage.removeItem(
+        STORAGE_KEY + "-" + currentUser.id
+      );
+    }
+
     conversationId = null;
     messagesEl.innerHTML = "";
-    render("model", "New Skill Cartel session started. What skill or experience would you like to explore?");
+
+    render(
+      "model",
+      "New Skill Cartel session started. What skill or experience would you like to explore?"
+    );
   });
+
+  // EXPORT CONVERSATION
   document.getElementById("exportBtn").addEventListener("click", () => {
     const transcript = history.map(m =>
-      (m.role === "user" ? "YOU" : "SKILL CARTEL") + "\n" + m.text
+      (m.role === "user" ? "YOU" : "SKILL CARTEL") +
+      "\n" +
+      m.text
     ).join("\n\n");
-    if (!transcript) { alert("There is no conversation to export yet."); return; }
-    const blob = new Blob([transcript], {type:"text/plain;charset=utf-8"});
+
+    if (!transcript) {
+      alert("There is no conversation to export yet.");
+      return;
+    }
+
+    const blob = new Blob(
+      [transcript],
+      { type: "text/plain;charset=utf-8" }
+    );
+
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
+
     a.href = url;
     a.download = "skill-cartel-conversation.txt";
+
     a.click();
+
     URL.revokeObjectURL(url);
   });
+
+  // INITIALIZE SUPABASE
   async function initializeSkillCartel() {
-    if (!window.supabase || !SUPABASE_URL.startsWith("https://") || SUPABASE_PUBLISHABLE_KEY.startsWith("PASTE_")) {
-      setAuthMessage("Setup required: add your Supabase Project URL and Publishable Key in index.html, then upload the file again.", true);
-      return;
+    try {
+      if (
+        !window.supabase ||
+        !SUPABASE_URL.startsWith("https://") ||
+        SUPABASE_PUBLISHABLE_KEY.startsWith("PASTE_")
+      ) {
+        setAuthMessage(
+          "Setup required: check your Supabase Project URL and Publishable Key.",
+          true
+        );
+
+        return;
+      }
+
+      supabaseClient = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY,
+        {
+          auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true
+          }
+        }
+      );
+
+      const { data, error } =
+        await supabaseClient.auth.getSession();
+
+      if (error) {
+        throw error;
+      }
+
+      if (data.session) {
+        await enterApp(data.session);
+      }
+
+    } catch (error) {
+      console.error("Initialization error:", error);
+
+      setAuthMessage(
+        "Could not initialize Skill Cartel: " + error.message,
+        true
+      );
     }
-    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
-    });
-    const { data, error } = await supabaseClient.auth.getSession();
-    if (error) {
-      setAuthMessage("Could not check your session: " + error.message, true);
-      return;
-    }
-    if (data.session) await enterApp(data.session);
   }
+
   initializeSkillCartel();
+
 </script>
+
 </body>
 </html>
