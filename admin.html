@@ -1,0 +1,865 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skill Cartel | Admin Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+:root {
+  --bg: #090909;
+  --panel: #121212;
+  --panel2: #181818;
+  --gold: #d6ad60;
+  --gold2: #f0d394;
+  --text: #f5f5f5;
+  --muted: #999;
+  --border: #292929;
+  --green: #45c58a;
+  --red: #ed6666;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+}
+button, input { font: inherit; }
+button { cursor: pointer; }
+.hidden { display: none !important; }
+
+.topbar {
+  height: 75px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5%;
+}
+.brand {
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+.brand span { color: var(--gold); }
+.admin-label {
+  color: var(--gold);
+  font-size: 11px;
+  letter-spacing: 2px;
+  margin-top: 5px;
+}
+.container {
+  width: min(1150px, 92%);
+  margin: 35px auto;
+}
+.heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 25px;
+}
+h1 { font-size: 28px; margin: 0 0 8px; }
+.subtitle { color: var(--muted); font-size: 13px; }
+
+.btn {
+  background: var(--gold);
+  color: #111;
+  border: 0;
+  padding: 11px 17px;
+  border-radius: 6px;
+  font-weight: 700;
+}
+.btn:hover { background: var(--gold2); }
+.btn.secondary {
+  background: #242424;
+  color: white;
+  border: 1px solid var(--border);
+}
+.btn.danger {
+  background: #3b1c1c;
+  color: #ffaaaa;
+  border: 1px solid #633030;
+}
+.btn.small { padding: 8px 12px; font-size: 12px; }
+button:disabled { opacity: .5; cursor: not-allowed; }
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 17px;
+  margin-bottom: 25px;
+}
+.stat {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 23px;
+  border-radius: 10px;
+}
+.stat-label {
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+.stat-value {
+  color: var(--gold);
+  font-size: 31px;
+  font-weight: 700;
+  margin-top: 13px;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 22px;
+  margin-bottom: 20px;
+}
+.panel h2 { font-size: 17px; margin: 0 0 18px; }
+.form-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr auto;
+  gap: 12px;
+  align-items: end;
+}
+.field label {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+.field input {
+  width: 100%;
+  background: #090909;
+  color: white;
+  border: 1px solid var(--border);
+  padding: 12px;
+  border-radius: 6px;
+  outline: none;
+}
+.field input:focus { border-color: var(--gold); }
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 17px;
+}
+.search {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+  min-width: 220px;
+}
+.search input {
+  flex: 1;
+  min-width: 0;
+  background: #090909;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: white;
+  padding: 11px;
+}
+.table-wrap { overflow-x: auto; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+}
+th {
+  color: var(--muted);
+  text-align: left;
+  font-size: 11px;
+  letter-spacing: 1px;
+  padding: 13px 10px;
+  border-bottom: 1px solid var(--border);
+}
+td {
+  padding: 15px 10px;
+  border-bottom: 1px solid #242424;
+  font-size: 13px;
+}
+.status {
+  display: inline-block;
+  border-radius: 20px;
+  padding: 5px 10px;
+  font-size: 11px;
+}
+.status.active { color: var(--green); background: #123124; }
+.status.inactive { color: #ff9d9d; background: #351d1d; }
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.notice {
+  padding: 12px 14px;
+  border-radius: 6px;
+  margin: 12px 0;
+  font-size: 13px;
+  display: none;
+}
+.notice.error { background: #351b1b; color: #ffb0b0; display: block; }
+.notice.success { background: #153323; color: #8ce3b0; display: block; }
+.empty {
+  padding: 30px;
+  text-align: center;
+  color: var(--muted);
+}
+.login-screen {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+.login-card {
+  width: min(420px, 100%);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 35px;
+}
+.login-card h1 { margin: 25px 0 8px; }
+.login-card .field { margin-top: 18px; }
+.login-card .btn { width: 100%; margin-top: 22px; }
+.login-card .subtitle { line-height: 1.6; }
+.login-logo { font-size: 23px; font-weight: 800; letter-spacing: 2px; }
+.login-logo span { color: var(--gold); }
+.footer {
+  text-align: center;
+  color: #666;
+  font-size: 11px;
+  padding: 25px;
+}
+#loading { color: var(--gold); padding: 15px 0; }
+@media(max-width:700px) {
+  .stats { grid-template-columns: 1fr; }
+  .form-grid { grid-template-columns: 1fr; }
+  .container { margin-top: 25px; }
+  .panel { padding: 15px; }
+  h1 { font-size: 23px; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<section id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <div class="login-logo">SKILL <span>CARTEL</span></div>
+    <div class="admin-label">OWNER CONTROL CENTER</div>
+
+    <h1>Admin Login</h1>
+    <p class="subtitle">Sign in with your authorized administrator account.</p>
+
+    <div id="loginNotice" class="notice"></div>
+
+    <form id="loginForm">
+      <div class="field">
+        <label>ADMIN EMAIL</label>
+        <input id="loginEmail" type="email"
+          value="panzymeal@gmail.com" required>
+      </div>
+
+      <div class="field">
+        <label>PASSWORD</label>
+        <input id="loginPassword" type="password"
+          placeholder="Enter your password" required>
+      </div>
+
+      <button id="loginButton" class="btn" type="submit">
+        Secure Login
+      </button>
+    </form>
+  </div>
+</section>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="hidden">
+
+<header class="topbar">
+  <div>
+    <div class="brand">SKILL <span>CARTEL</span></div>
+    <div class="admin-label">ADMIN DASHBOARD</div>
+  </div>
+  <button id="logoutButton" class="btn secondary small">
+    Sign Out
+  </button>
+</header>
+
+<main class="container">
+
+  <div class="heading">
+    <div>
+      <h1>Dashboard Overview</h1>
+      <div class="subtitle">Manage customers and membership access.</div>
+    </div>
+    <button id="refreshButton" class="btn secondary">
+      Refresh Data
+    </button>
+  </div>
+
+  <div id="dashboardNotice" class="notice"></div>
+  <div id="loading">Loading dashboard...</div>
+
+  <section id="dashboardContent" class="hidden">
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">REGISTERED CUSTOMERS</div>
+        <div id="totalCustomers" class="stat-value">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">ACTIVE MEMBERSHIPS</div>
+        <div id="activeMembers" class="stat-value">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">INACTIVE CUSTOMERS</div>
+        <div id="inactiveMembers" class="stat-value">0</div>
+      </div>
+    </div>
+
+    <section class="panel">
+      <h2>Grant Membership</h2>
+      <p class="subtitle">Approve a registered customer using their Supabase account email.</p>
+
+      <div class="form-grid">
+        <div class="field">
+          <label>CUSTOMER EMAIL</label>
+          <input id="grantEmail" type="email"
+            placeholder="customer@example.com">
+        </div>
+        <div class="field">
+          <label>EXPIRY DATE (OPTIONAL)</label>
+          <input id="expiryDate" type="date">
+        </div>
+        <button id="grantButton" class="btn">
+          Activate Access
+        </button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Customer Management</h2>
+
+      <div class="toolbar">
+        <div class="search">
+          <input id="searchInput" type="search"
+            placeholder="Search customer email...">
+          <button id="searchButton" class="btn secondary">Search</button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>CUSTOMER EMAIL</th>
+              <th>JOINED</th>
+              <th>STATUS</th>
+              <th>EXPIRY</th>
+              <th>ACTION</th>
+            </tr>
+          </thead>
+          <tbody id="customerRows"></tbody>
+        </table>
+      </div>
+
+      <div id="emptyMessage" class="empty hidden">
+        No customers found.
+      </div>
+
+      <div class="pagination">
+        <span id="pageInfo">Page 1</span>
+        <div>
+          <button id="previousButton" class="btn secondary small">Previous</button>
+          <button id="nextButton" class="btn secondary small">Next</button>
+        </div>
+      </div>
+    </section>
+
+  </section>
+</main>
+
+<div class="footer">SKILL CARTEL © 2026 · OWNER ADMINISTRATION</div>
+</div>
+
+<script>
+/* =========================================
+   1. CONFIGURATION
+========================================= */
+
+const SUPABASE_URL = "https://gssguxwskyvmoppnuowk.supabase.co";
+
+// Paste your Supabase public anon key between the quotation marks.
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdzc2d1eHdza3l2bW9wcG51b3drIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTU2MTk3NzEsImV4cCI6MjExMTE5NTc3MX0.Cv9L080ch6smOmed06pS5emQUE_A-XbaxAzZJ5Ea290";
+
+const WORKER_URL =
+  "https://skill-cartel-api.panzymeal.workers.dev";
+
+const ADMIN_EMAIL = "panzymeal@gmail.com";
+
+const supabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
+
+/* =========================================
+   2. APPLICATION STATE
+========================================= */
+
+let currentSession = null;
+let currentPage = 1;
+const perPage = 10;
+let currentSearch = "";
+
+/* =========================================
+   3. ELEMENT HELPERS
+========================================= */
+
+const $ = id => document.getElementById(id);
+
+function showNotice(id, message, type = "error") {
+  const el = $(id);
+  el.textContent = message;
+  el.className = "notice " + type;
+}
+
+function clearNotice(id) {
+  const el = $(id);
+  el.textContent = "";
+  el.className = "notice";
+}
+
+function formatDate(value) {
+  if (!value) return "No expiry";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "—";
+  return date.toLocaleDateString();
+}
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  })[char]);
+}
+
+/* =========================================
+   4. WORKER API
+========================================= */
+
+async function workerRequest(path, options = {}) {
+  if (!currentSession?.access_token) {
+    throw new Error("Your login session has expired. Please sign in again.");
+  }
+
+  const response = await fetch(WORKER_URL + path, {
+    method: options.method || "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + currentSession.access_token
+    },
+    body: options.body ? JSON.stringify(options.body) : undefined
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(
+      data.error || data.message || "Request failed (" + response.status + ")"
+    );
+  }
+
+  return data;
+}
+
+/* =========================================
+   5. AUTHENTICATION
+========================================= */
+
+function showLogin() {
+  $("loginScreen").classList.remove("hidden");
+  $("dashboard").classList.add("hidden");
+}
+
+function showDashboard() {
+  $("loginScreen").classList.add("hidden");
+  $("dashboard").classList.remove("hidden");
+}
+
+async function verifyAdminAndLoad() {
+  if (!currentSession) {
+    showLogin();
+    return;
+  }
+
+  const email = currentSession.user?.email?.toLowerCase();
+
+  if (email !== ADMIN_EMAIL.toLowerCase()) {
+    await supabase.auth.signOut();
+    currentSession = null;
+    showLogin();
+    showNotice("loginNotice", "This account is not authorized as the administrator.");
+    return;
+  }
+
+  showDashboard();
+  await loadDashboard();
+}
+
+$("loginForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  clearNotice("loginNotice");
+
+  const email = $("loginEmail").value.trim().toLowerCase();
+  const password = $("loginPassword").value;
+  const button = $("loginButton");
+
+  if (email !== ADMIN_EMAIL.toLowerCase()) {
+    showNotice("loginNotice", "Only the authorized administrator can sign in here.");
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Signing in...";
+
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) throw error;
+
+    currentSession = data.session;
+    await verifyAdminAndLoad();
+
+  } catch (error) {
+    showNotice("loginNotice", error.message);
+  } finally {
+    button.disabled = false;
+    button.textContent = "Secure Login";
+  }
+});
+
+$("logoutButton").addEventListener("click", async () => {
+  await supabase.auth.signOut();
+  currentSession = null;
+  showLogin();
+});
+
+supabase.auth.onAuthStateChange((event, session) => {
+  currentSession = session;
+
+  if (event === "SIGNED_OUT") {
+    showLogin();
+  }
+});
+
+/* =========================================
+   6. DASHBOARD DATA
+========================================= */
+
+async function loadDashboard() {
+  $("loading").classList.remove("hidden");
+  $("dashboardContent").classList.add("hidden");
+  clearNotice("dashboardNotice");
+
+  try {
+    const stats = await workerRequest("/admin/stats");
+
+    $("totalCustomers").textContent =
+      Number(stats.registered_customers || 0).toLocaleString();
+
+    $("activeMembers").textContent =
+      Number(stats.active_memberships || 0).toLocaleString();
+
+    $("inactiveMembers").textContent =
+      Math.max(
+        0,
+        Number(stats.registered_customers || 0) -
+        Number(stats.active_memberships || 0)
+      ).toLocaleString();
+
+    await loadCustomers();
+
+    $("dashboardContent").classList.remove("hidden");
+
+  } catch (error) {
+    showNotice("dashboardNotice", error.message);
+
+  } finally {
+    $("loading").classList.add("hidden");
+  }
+}
+
+/* =========================================
+   7. CUSTOMER MANAGEMENT
+========================================= */
+
+async function loadCustomers() {
+  const params = new URLSearchParams({
+    search: currentSearch,
+    page: String(currentPage),
+    per_page: String(perPage)
+  });
+
+  const result = await workerRequest(
+    "/admin/customers?" + params.toString()
+  );
+
+  const customers = result.customers || [];
+  const tbody = $("customerRows");
+
+  tbody.innerHTML = "";
+
+  $("emptyMessage").classList.toggle(
+    "hidden",
+    customers.length !== 0
+  );
+
+  customers.forEach(customer => {
+    const active = customer.active === true;
+    const expiry = customer.expires_at
+      ? new Date(customer.expires_at)
+      : null;
+
+    const expired = expiry && expiry.getTime() <= Date.now();
+    const isActive = active && !expired;
+
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td>${escapeHTML(customer.email)}</td>
+      <td>${escapeHTML(formatDate(customer.created_at))}</td>
+      <td>
+        <span class="status ${isActive ? "active" : "inactive"}">
+          ${isActive ? "Active" : "Inactive"}
+        </span>
+      </td>
+      <td>${escapeHTML(formatDate(customer.expires_at))}</td>
+      <td>
+        ${
+          isActive
+          ? `<button class="btn danger small" data-action="revoke">Revoke</button>`
+          : `<button class="btn small" data-action="grant">Activate</button>`
+        }
+      </td>
+    `;
+
+    const actionButton = row.querySelector("button");
+
+    actionButton.addEventListener("click", async () => {
+      const email = customer.email;
+
+      if (isActive) {
+        const confirmed = confirm(
+          "Are you sure you want to revoke access for " + email + "?"
+        );
+        if (!confirmed) return;
+        await revokeCustomer(email, actionButton);
+      } else {
+        $("grantEmail").value = email;
+        $("grantEmail").scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+        $("expiryDate").focus();
+      }
+    });
+
+    tbody.appendChild(row);
+  });
+
+  $("pageInfo").textContent =
+    "Page " + currentPage + " · " + customers.length + " customers shown";
+
+  $("previousButton").disabled = currentPage <= 1;
+  $("nextButton").disabled = customers.length < perPage;
+}
+
+/* =========================================
+   8. GRANT MEMBERSHIP
+========================================= */
+
+$("grantButton").addEventListener("click", grantCustomer);
+
+async function grantCustomer() {
+  const email = $("grantEmail").value.trim().toLowerCase();
+  const dateValue = $("expiryDate").value;
+  const button = $("grantButton");
+
+  clearNotice("dashboardNotice");
+
+  if (!email) {
+    showNotice("dashboardNotice", "Please enter a customer email.");
+    return;
+  }
+
+  if (dateValue) {
+    const selectedDate = new Date(dateValue + "T23:59:59");
+    if (selectedDate.getTime() <= Date.now()) {
+      showNotice("dashboardNotice", "Please choose a future expiry date.");
+      return;
+    }
+  }
+
+  const body = { email };
+
+  if (dateValue) {
+    body.expires_at = new Date(
+      dateValue + "T23:59:59"
+    ).toISOString();
+  }
+
+  button.disabled = true;
+  button.textContent = "Activating...";
+
+  try {
+    await workerRequest("/admin/grant", {
+      method: "POST",
+      body
+    });
+
+    showNotice(
+      "dashboardNotice",
+      "Membership successfully activated for " + email,
+      "success"
+    );
+
+    $("grantEmail").value = "";
+    $("expiryDate").value = "";
+    await loadDashboard();
+
+  } catch (error) {
+    showNotice("dashboardNotice", error.message);
+
+  } finally {
+    button.disabled = false;
+    button.textContent = "Activate Access";
+  }
+}
+
+/* =========================================
+   9. REVOKE MEMBERSHIP
+========================================= */
+
+async function revokeCustomer(email, button) {
+  button.disabled = true;
+  button.textContent = "Revoking...";
+
+  try {
+    await workerRequest("/admin/revoke", {
+      method: "POST",
+      body: { email }
+    });
+
+    showNotice(
+      "dashboardNotice",
+      "Access successfully revoked for " + email,
+      "success"
+    );
+
+    await loadDashboard();
+
+  } catch (error) {
+    showNotice("dashboardNotice", error.message);
+    button.disabled = false;
+    button.textContent = "Revoke";
+  }
+}
+
+/* =========================================
+   10. SEARCH AND PAGINATION
+========================================= */
+
+function searchCustomers() {
+  currentSearch = $("searchInput").value.trim();
+  currentPage = 1;
+  loadCustomers().catch(error =>
+    showNotice("dashboardNotice", error.message)
+  );
+}
+
+$("searchButton").addEventListener("click", searchCustomers);
+
+$("searchInput").addEventListener("keydown", event => {
+  if (event.key === "Enter") searchCustomers();
+});
+
+$("previousButton").addEventListener("click", async () => {
+  if (currentPage > 1) {
+    currentPage--;
+    try {
+      await loadCustomers();
+    } catch (error) {
+      showNotice("dashboardNotice", error.message);
+    }
+  }
+});
+
+$("nextButton").addEventListener("click", async () => {
+  currentPage++;
+  try {
+    await loadCustomers();
+  } catch (error) {
+    currentPage--;
+    showNotice("dashboardNotice", error.message);
+  }
+});
+
+$("refreshButton").addEventListener("click", loadDashboard);
+
+/* =========================================
+   11. INITIAL SESSION CHECK
+========================================= */
+
+async function initializeApp() {
+  if (
+    !SUPABASE_ANON_KEY ||
+    SUPABASE_ANON_KEY === "PASTE_YOUR_SUPABASE_ANON_KEY_HERE"
+  ) {
+    showNotice(
+      "loginNotice",
+      "Please add your Supabase public anon key in the configuration section."
+    );
+    return;
+  }
+
+  const { data, error } = await supabase.auth.getSession();
+
+  if (error) {
+    showNotice("loginNotice", error.message);
+    return;
+  }
+
+  currentSession = data.session;
+
+  if (currentSession) {
+    await verifyAdminAndLoad();
+  } else {
+    showLogin();
+  }
+}
+
+initializeApp();
+
+</script>
+</body>
+</html>
