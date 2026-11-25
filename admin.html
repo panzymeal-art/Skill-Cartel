@@ -10,245 +10,244 @@
 
 <style>
 :root {
-  --bg: #090909;
-  --panel: #121212;
-  --panel2: #181818;
-  --gold: #d6ad60;
-  --gold2: #f0d394;
-  --text: #f5f5f5;
-  --muted: #999;
-  --border: #292929;
-  --green: #45c58a;
-  --red: #ed6666;
+  --bg:#090909;
+  --panel:#121212;
+  --gold:#d6ad60;
+  --gold2:#f0d394;
+  --text:#f5f5f5;
+  --muted:#999;
+  --border:#292929;
+  --green:#45c58a;
 }
-* { box-sizing: border-box; }
+* {box-sizing:border-box}
 body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: Arial, sans-serif;
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,sans-serif;
 }
-button, input { font: inherit; }
-button { cursor: pointer; }
-.hidden { display: none !important; }
+button,input {font:inherit}
+button {cursor:pointer}
+.hidden {display:none!important}
 
 .topbar {
-  height: 75px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 5%;
+  height:75px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 5%;
 }
 .brand {
-  font-size: 21px;
-  font-weight: 800;
-  letter-spacing: 2px;
+  font-size:21px;
+  font-weight:800;
+  letter-spacing:2px;
 }
-.brand span { color: var(--gold); }
+.brand span,.login-logo span {color:var(--gold)}
 .admin-label {
-  color: var(--gold);
-  font-size: 11px;
-  letter-spacing: 2px;
-  margin-top: 5px;
+  color:var(--gold);
+  font-size:11px;
+  letter-spacing:2px;
+  margin-top:5px;
 }
 .container {
-  width: min(1150px, 92%);
-  margin: 35px auto;
+  width:min(1150px,92%);
+  margin:35px auto;
 }
 .heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 15px;
-  flex-wrap: wrap;
-  margin-bottom: 25px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  flex-wrap:wrap;
+  margin-bottom:25px;
 }
-h1 { font-size: 28px; margin: 0 0 8px; }
-.subtitle { color: var(--muted); font-size: 13px; }
+h1 {font-size:28px;margin:0 0 8px}
+.subtitle {color:var(--muted);font-size:13px}
 
 .btn {
-  background: var(--gold);
-  color: #111;
-  border: 0;
-  padding: 11px 17px;
-  border-radius: 6px;
-  font-weight: 700;
+  background:var(--gold);
+  color:#111;
+  border:0;
+  padding:11px 17px;
+  border-radius:6px;
+  font-weight:700;
 }
-.btn:hover { background: var(--gold2); }
+.btn:hover {background:var(--gold2)}
 .btn.secondary {
-  background: #242424;
-  color: white;
-  border: 1px solid var(--border);
+  background:#242424;
+  color:white;
+  border:1px solid var(--border);
 }
 .btn.danger {
-  background: #3b1c1c;
-  color: #ffaaaa;
-  border: 1px solid #633030;
+  background:#3b1c1c;
+  color:#ffaaaa;
+  border:1px solid #633030;
 }
-.btn.small { padding: 8px 12px; font-size: 12px; }
-button:disabled { opacity: .5; cursor: not-allowed; }
+.btn.small {padding:8px 12px;font-size:12px}
+button:disabled {opacity:.5;cursor:not-allowed}
 
 .stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 17px;
-  margin-bottom: 25px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:17px;
+  margin-bottom:25px;
 }
 .stat {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  padding: 23px;
-  border-radius: 10px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  padding:23px;
+  border-radius:10px;
 }
 .stat-label {
-  color: var(--muted);
-  font-size: 12px;
-  letter-spacing: 1px;
+  color:var(--muted);
+  font-size:12px;
+  letter-spacing:1px;
 }
 .stat-value {
-  color: var(--gold);
-  font-size: 31px;
-  font-weight: 700;
-  margin-top: 13px;
+  color:var(--gold);
+  font-size:31px;
+  font-weight:700;
+  margin-top:13px;
 }
-
 .panel {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 22px;
-  margin-bottom: 20px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:22px;
+  margin-bottom:20px;
 }
-.panel h2 { font-size: 17px; margin: 0 0 18px; }
+.panel h2 {font-size:17px;margin:0 0 18px}
 .form-grid {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr auto;
-  gap: 12px;
-  align-items: end;
+  display:grid;
+  grid-template-columns:1.5fr 1fr auto;
+  gap:12px;
+  align-items:end;
 }
 .field label {
-  display: block;
-  color: var(--muted);
-  font-size: 12px;
-  margin-bottom: 8px;
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:8px;
 }
 .field input {
-  width: 100%;
-  background: #090909;
-  color: white;
-  border: 1px solid var(--border);
-  padding: 12px;
-  border-radius: 6px;
-  outline: none;
+  width:100%;
+  background:#090909;
+  color:white;
+  border:1px solid var(--border);
+  padding:12px;
+  border-radius:6px;
+  outline:none;
 }
-.field input:focus { border-color: var(--gold); }
-
+.field input:focus {border-color:var(--gold)}
 .toolbar {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 17px;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:17px;
 }
 .search {
-  display: flex;
-  gap: 8px;
-  flex: 1;
-  min-width: 220px;
+  display:flex;
+  gap:8px;
+  flex:1;
+  min-width:220px;
 }
 .search input {
-  flex: 1;
-  min-width: 0;
-  background: #090909;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: white;
-  padding: 11px;
+  flex:1;
+  min-width:0;
+  background:#090909;
+  border:1px solid var(--border);
+  border-radius:6px;
+  color:white;
+  padding:11px;
 }
-.table-wrap { overflow-x: auto; }
+.table-wrap {overflow-x:auto}
 table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 720px;
+  width:100%;
+  border-collapse:collapse;
+  min-width:720px;
 }
 th {
-  color: var(--muted);
-  text-align: left;
-  font-size: 11px;
-  letter-spacing: 1px;
-  padding: 13px 10px;
-  border-bottom: 1px solid var(--border);
+  color:var(--muted);
+  text-align:left;
+  font-size:11px;
+  letter-spacing:1px;
+  padding:13px 10px;
+  border-bottom:1px solid var(--border);
 }
 td {
-  padding: 15px 10px;
-  border-bottom: 1px solid #242424;
-  font-size: 13px;
+  padding:15px 10px;
+  border-bottom:1px solid #242424;
+  font-size:13px;
 }
 .status {
-  display: inline-block;
-  border-radius: 20px;
-  padding: 5px 10px;
-  font-size: 11px;
+  display:inline-block;
+  border-radius:20px;
+  padding:5px 10px;
+  font-size:11px;
 }
-.status.active { color: var(--green); background: #123124; }
-.status.inactive { color: #ff9d9d; background: #351d1d; }
-
+.status.active {color:var(--green);background:#123124}
+.status.inactive {color:#ff9d9d;background:#351d1d}
 .pagination {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-top: 18px;
-  color: var(--muted);
-  font-size: 12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:18px;
+  color:var(--muted);
+  font-size:12px;
 }
 .notice {
-  padding: 12px 14px;
-  border-radius: 6px;
-  margin: 12px 0;
-  font-size: 13px;
-  display: none;
+  padding:12px 14px;
+  border-radius:6px;
+  margin:12px 0;
+  font-size:13px;
+  display:none;
 }
-.notice.error { background: #351b1b; color: #ffb0b0; display: block; }
-.notice.success { background: #153323; color: #8ce3b0; display: block; }
+.notice.error {background:#351b1b;color:#ffb0b0;display:block}
+.notice.success {background:#153323;color:#8ce3b0;display:block}
 .empty {
-  padding: 30px;
-  text-align: center;
-  color: var(--muted);
+  padding:30px;
+  text-align:center;
+  color:var(--muted);
 }
 .login-screen {
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  padding: 20px;
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:20px;
 }
 .login-card {
-  width: min(420px, 100%);
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 35px;
+  width:min(420px,100%);
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:35px;
 }
-.login-card h1 { margin: 25px 0 8px; }
-.login-card .field { margin-top: 18px; }
-.login-card .btn { width: 100%; margin-top: 22px; }
-.login-card .subtitle { line-height: 1.6; }
-.login-logo { font-size: 23px; font-weight: 800; letter-spacing: 2px; }
-.login-logo span { color: var(--gold); }
+.login-card h1 {margin:25px 0 8px}
+.login-card .field {margin-top:18px}
+.login-card .btn {width:100%;margin-top:22px}
+.login-card .subtitle {line-height:1.6}
+.login-logo {
+  font-size:23px;
+  font-weight:800;
+  letter-spacing:2px;
+}
 .footer {
-  text-align: center;
-  color: #666;
-  font-size: 11px;
-  padding: 25px;
+  text-align:center;
+  color:#666;
+  font-size:11px;
+  padding:25px;
 }
-#loading { color: var(--gold); padding: 15px 0; }
+#loading {color:var(--gold);padding:15px 0}
+
 @media(max-width:700px) {
-  .stats { grid-template-columns: 1fr; }
-  .form-grid { grid-template-columns: 1fr; }
-  .container { margin-top: 25px; }
-  .panel { padding: 15px; }
-  h1 { font-size: 23px; }
+  .stats {grid-template-columns:1fr}
+  .form-grid {grid-template-columns:1fr}
+  .container {margin-top:25px}
+  .panel {padding:15px}
+  h1 {font-size:23px}
 }
 </style>
 </head>
@@ -403,15 +402,18 @@ td {
 
 const SUPABASE_URL = "https://gssguxwskyvmoppnuowk.supabase.co";
 
-// Paste your Supabase public anon key between the quotation marks.
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdzc2d1eHdza3l2bW9wcG51b3drIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTU2MTk3NzEsImV4cCI6MjExMTE5NTc3MX0.Cv9L080ch6smOmed06pS5emQUE_A-XbaxAzZJ5Ea290";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdzc3d1eHdza3l2bW9wcG51b3drIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTU2MTk3NzEsImV4cCI6MjExMTE5NTc3MX0.Cv9L080ch6smOmed06pS5emQUE_A-XbaxAzZJ5Ea290";
 
-const WORKER_URL =
-  "https://skill-cartel-api.panzymeal.workers.dev";
-
+const WORKER_URL = "https://skill-cartel-api.panzymeal.workers.dev";
 const ADMIN_EMAIL = "panzymeal@gmail.com";
 
-const supabase = window.supabase.createClient(
+/*
+  IMPORTANT FIX:
+  Use supabaseClient instead of supabase.
+  The Supabase CDN library already exposes window.supabase.
+*/
+
+const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_ANON_KEY
 );
@@ -512,7 +514,7 @@ async function verifyAdminAndLoad() {
   const email = currentSession.user?.email?.toLowerCase();
 
   if (email !== ADMIN_EMAIL.toLowerCase()) {
-    await supabase.auth.signOut();
+    await supabaseClient.auth.signOut();
     currentSession = null;
     showLogin();
     showNotice("loginNotice", "This account is not authorized as the administrator.");
@@ -540,7 +542,7 @@ $("loginForm").addEventListener("submit", async event => {
   button.textContent = "Signing in...";
 
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
       email,
       password
     });
@@ -559,12 +561,12 @@ $("loginForm").addEventListener("submit", async event => {
 });
 
 $("logoutButton").addEventListener("click", async () => {
-  await supabase.auth.signOut();
+  await supabaseClient.auth.signOut();
   currentSession = null;
   showLogin();
 });
 
-supabase.auth.onAuthStateChange((event, session) => {
+supabaseClient.auth.onAuthStateChange((event, session) => {
   currentSession = session;
 
   if (event === "SIGNED_OUT") {
@@ -792,6 +794,7 @@ async function revokeCustomer(email, button) {
 function searchCustomers() {
   currentSearch = $("searchInput").value.trim();
   currentPage = 1;
+
   loadCustomers().catch(error =>
     showNotice("dashboardNotice", error.message)
   );
@@ -806,6 +809,7 @@ $("searchInput").addEventListener("keydown", event => {
 $("previousButton").addEventListener("click", async () => {
   if (currentPage > 1) {
     currentPage--;
+
     try {
       await loadCustomers();
     } catch (error) {
@@ -816,6 +820,7 @@ $("previousButton").addEventListener("click", async () => {
 
 $("nextButton").addEventListener("click", async () => {
   currentPage++;
+
   try {
     await loadCustomers();
   } catch (error) {
@@ -824,36 +829,47 @@ $("nextButton").addEventListener("click", async () => {
   }
 });
 
-$("refreshButton").addEventListener("click", loadDashboard);
+$("refreshButton").addEventListener("click", () => {
+  loadDashboard().catch(error =>
+    showNotice("dashboardNotice", error.message)
+  );
+});
 
 /* =========================================
    11. INITIAL SESSION CHECK
 ========================================= */
 
 async function initializeApp() {
-  if (
-    !SUPABASE_ANON_KEY ||
-    SUPABASE_ANON_KEY === "PASTE_YOUR_SUPABASE_ANON_KEY_HERE"
-  ) {
-    showNotice(
-      "loginNotice",
-      "Please add your Supabase public anon key in the configuration section."
-    );
-    return;
-  }
+  try {
+    if (
+      !SUPABASE_ANON_KEY ||
+      SUPABASE_ANON_KEY === "PASTE_YOUR_SUPABASE_ANON_KEY_HERE"
+    ) {
+      showNotice(
+        "loginNotice",
+        "Please add your Supabase public anon key in the configuration section."
+      );
+      return;
+    }
 
-  const { data, error } = await supabase.auth.getSession();
+    if (!window.supabase?.createClient) {
+      throw new Error("Supabase library could not load. Refresh the page and try again.");
+    }
 
-  if (error) {
-    showNotice("loginNotice", error.message);
-    return;
-  }
+    const { data, error } = await supabaseClient.auth.getSession();
 
-  currentSession = data.session;
+    if (error) throw error;
 
-  if (currentSession) {
-    await verifyAdminAndLoad();
-  } else {
+    currentSession = data.session;
+
+    if (currentSession) {
+      await verifyAdminAndLoad();
+    } else {
+      showLogin();
+    }
+
+  } catch (error) {
+    showNotice("loginNotice", "Initialization error: " + error.message);
     showLogin();
   }
 }
