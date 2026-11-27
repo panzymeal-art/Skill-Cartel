@@ -1,0 +1,1705 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090909">
+  <title>Skill Cartel | Turn Your Skills Into Opportunity</title>
+  <meta name="description" content="Skill Cartel helps people turn their skills into digital products, marketable offers and online business opportunities.">
+
+  <style>
+    :root {
+      --bg: #090909;
+      --panel: #111;
+      --panel2: #171717;
+      --line: #292929;
+      --gold: #d8b56a;
+      --gold2: #f0d79b;
+      --muted: #a7a7a7;
+      --white: #f6f4ef;
+      --green: #75c99a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(ellipse at 50% -15%, #332817 0%, #111 34%, var(--bg) 70%);
+      color: var(--white);
+      font: 15px/1.55 Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Arial;
+    }
+
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+
+    .wrap {
+      max-width: 1120px;
+      margin: auto;
+      padding: 24px 20px 40px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 8px 0 28px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mark {
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--gold);
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      color: var(--gold);
+      font-weight: 800;
+      letter-spacing: -2px;
+    }
+
+    .brand strong {
+      display: block;
+      letter-spacing: 2px;
+      font-size: 14px;
+    }
+
+    .brand small {
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 1.5px;
+    }
+
+    .status {
+      font-size: 12px;
+      color: var(--green);
+      border: 1px solid #294c38;
+      border-radius: 30px;
+      padding: 6px 10px;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 48px 12px 34px;
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: clamp(34px, 6vw, 62px);
+      line-height: 1.05;
+      letter-spacing: -2px;
+      margin: 14px 0;
+    }
+
+    .gold { color: var(--gold2); }
+
+    .hero p {
+      max-width: 650px;
+      margin: 0 auto;
+      color: #b8b5ae;
+      font-size: 16px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 270px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .side, .chat {
+      background: rgba(17,17,17,.94);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+    }
+
+    .side { padding: 20px; }
+
+    .side h2 {
+      font-size: 13px;
+      letter-spacing: 1.5px;
+      margin: 0 0 14px;
+      color: var(--gold);
+    }
+
+    .step {
+      display: flex;
+      gap: 11px;
+      margin: 15px 0;
+      color: #ddd;
+      font-size: 13px;
+    }
+
+    .num {
+      flex: none;
+      width: 25px;
+      height: 25px;
+      border: 1px solid #51452e;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: var(--gold);
+      font-size: 11px;
+    }
+
+    .side-note {
+      border-top: 1px solid var(--line);
+      margin-top: 20px;
+      padding-top: 16px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .chat {
+      overflow: hidden;
+      min-height: 640px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-head {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .chat-head strong { font-size: 14px; }
+
+    .chat-head small {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .ghost, .chip {
+      background: #171717;
+      border: 1px solid #39352c;
+      color: #ddd;
+      border-radius: 9px;
+      padding: 8px 10px;
+      font-size: 11px;
+    }
+
+    .ghost:hover, .chip:hover {
+      border-color: var(--gold);
+      color: var(--gold2);
+    }
+
+    button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    #messages {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      flex: 1;
+      max-height: 540px;
+      overflow: auto;
+    }
+
+    .msg {
+      max-width: 88%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-size: 14px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .bot {
+      align-self: flex-start;
+      background: #1b1a17;
+      border: 1px solid #3a3325;
+      color: #f0eee8;
+      border-bottom-left-radius: 4px;
+    }
+
+    .user {
+      align-self: flex-end;
+      background: #332a1b;
+      border: 1px solid #6b542d;
+      color: #fff4dc;
+      border-bottom-right-radius: 4px;
+    }
+
+    .typing {
+      color: var(--muted);
+      font-size: 12px;
+      padding: 0 20px 12px;
+    }
+
+    .chips {
+      padding: 0 18px 14px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .composer {
+      padding: 14px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      gap: 10px;
+      background: #0e0e0e;
+    }
+
+    #prompt {
+      min-width: 0;
+      flex: 1;
+      background: #191919;
+      border: 1px solid #393939;
+      border-radius: 12px;
+      padding: 13px;
+      color: white;
+      outline: none;
+    }
+
+    #prompt:focus { border-color: var(--gold); }
+
+    #send {
+      background: linear-gradient(135deg, #e8ce91, #b58a3f);
+      color: #17120a;
+      border: 0;
+      border-radius: 12px;
+      padding: 0 20px;
+      font-weight: 800;
+    }
+
+    .foot {
+      color: #777;
+      text-align: center;
+      font-size: 11px;
+      margin: 22px auto 0;
+      max-width: 850px;
+    }
+
+    .hidden { display: none !important; }
+
+    .auth-screen {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 28px 16px;
+      background: radial-gradient(ellipse at 50% -15%, #332817 0%, #111 38%, #090909 75%);
+    }
+
+    .auth-card {
+      width: min(100%, 470px);
+      padding: 30px;
+      background: #111;
+      border: 1px solid #302b22;
+      border-radius: 20px;
+      box-shadow: 0 22px 70px #0008;
+    }
+
+    .auth-brand { margin-bottom: 30px; }
+
+    .auth-intro {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .auth-intro h1 {
+      font-size: 36px;
+      line-height: 1.08;
+      letter-spacing: -1.5px;
+      margin: 12px 0;
+    }
+
+    .auth-intro p {
+      color: #b8b5ae;
+      font-size: 14px;
+    }
+
+    .auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      padding: 5px;
+      background: #191919;
+      border: 1px solid #333;
+      border-radius: 12px;
+      margin: 22px 0;
+    }
+
+    .auth-tab {
+      border: 0;
+      border-radius: 9px;
+      background: transparent;
+      color: #aaa;
+      padding: 10px;
+      font-weight: 650;
+    }
+
+    .auth-tab.active {
+      background: #302719;
+      color: #f2d99e;
+    }
+
+    .auth-form { display: grid; gap: 9px; }
+
+    .auth-form label {
+      font-size: 12px;
+      color: #d7d0c2;
+      margin-top: 5px;
+    }
+
+    .auth-form input {
+      width: 100%;
+      background: #191919;
+      border: 1px solid #393939;
+      border-radius: 10px;
+      padding: 13px;
+      color: #fff;
+      outline: none;
+    }
+
+    .auth-form input:focus { border-color: var(--gold); }
+
+    .auth-primary, .guest-button {
+      width: 100%;
+      border-radius: 10px;
+      padding: 13px;
+      font-weight: 750;
+      margin-top: 10px;
+    }
+
+    .auth-primary {
+      background: linear-gradient(135deg, #e8ce91, #b58a3f);
+      color: #17120a;
+      border: 0;
+    }
+
+    .guest-button {
+      background: #171717;
+      border: 1px solid #51452e;
+      color: #f0d79b;
+    }
+
+    .auth-message {
+      min-height: 20px;
+      margin-top: 12px;
+      color: #f0d79b;
+      font-size: 12px;
+      white-space: pre-wrap;
+    }
+
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #777;
+      font-size: 10px;
+      margin: 18px 0 6px;
+    }
+
+    .auth-divider:before, .auth-divider:after {
+      content: "";
+      height: 1px;
+      background: #333;
+      flex: 1;
+    }
+
+    .auth-terms {
+      font-size: 10px;
+      color: #777;
+      line-height: 1.5;
+      text-align: center;
+      margin: 20px 0 0;
+    }
+
+    .account-actions {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .account-label {
+      font-size: 11px;
+      color: #aaa;
+      max-width: 160px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    @media(max-width:760px) {
+      .composer { flex-wrap: wrap; }
+      .composer #prompt { flex-basis: 65%; }
+      .layout { grid-template-columns: 1fr; }
+      .side { order: 2; }
+      .chat { min-height: 620px; }
+      .hero { padding: 36px 4px 26px; }
+      .wrap { padding: 16px 12px 30px; }
+      header { padding-bottom: 18px; }
+    }
+
+/* PUBLIC CONSULTING-STYLE WEBSITE */
+html { scroll-behavior: smooth; }
+body { background: #090909; color: #f6f4ef; }
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; }
+.hidden { display: none !important; }
+
+#publicSite { min-height: 100vh; overflow: hidden; }
+.announcement {
+  padding: 9px 5vw; text-align: center; color: #d8b56a;
+  background: #17130d; border-bottom: 1px solid #342a19;
+  font-size: 11px; letter-spacing: .12em;
+}
+.site-header {
+  max-width: 1440px; margin: auto; padding: 22px 5vw;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 28px; border-bottom: 1px solid #292929; background: rgba(9,9,9,.94);
+}
+.site-brand { display: inline-flex; align-items: center; gap: 12px; min-width: max-content; }
+.brand-symbol {
+  width: 42px; height: 42px; display: grid; place-items: center;
+  border: 1px solid #d8b56a; color: #f0d79b; font-weight: 800;
+  letter-spacing: -2px; font-size: 17px;
+}
+.site-brand b { display: block; font-size: 13px; letter-spacing: .2em; }
+.site-brand small { display: block; margin-top: 4px; color: #a7a7a7; font-size: 9px; letter-spacing: .16em; }
+.main-nav { display: flex; align-items: center; gap: clamp(14px,2.3vw,34px); }
+.main-nav a { color: #d4d0c8; font-size: 12px; transition: color .2s; }
+.main-nav a:hover, .text-link:hover { color: #f0d79b; }
+.nav-cta, .button-gold {
+  border: 1px solid #d8b56a; color: #17120a;
+  background: linear-gradient(135deg,#f0d79b,#c49a50);
+  padding: 13px 19px; font-weight: 750; font-size: 12px;
+}
+.nav-cta { padding: 11px 16px; }
+.menu-toggle { display: none; background: transparent; color: #f0d79b; border: 1px solid #51452e; padding: 8px 12px; }
+
+.hero-section {
+  max-width: 1440px; margin: auto; padding: 86px 7vw 26px;
+  display: grid; grid-template-columns: 1.08fr .82fr; gap: 6vw;
+  align-items: center; position: relative;
+}
+.hero-copy { max-width: 690px; }
+.eyebrow, .section-kicker {
+  color: #d8b56a; font-size: 10px; font-weight: 750;
+  letter-spacing: .22em; text-transform: uppercase;
+}
+.eyebrow span { display: inline-block; width: 24px; height: 1px; background: #d8b56a; vertical-align: middle; margin-right: 9px; }
+.hero-section h1 {
+  margin: 22px 0; max-width: 720px; font-size: clamp(42px,6vw,78px);
+  line-height: 1.02; letter-spacing: -.055em; font-weight: 650;
+}
+.hero-section h1 em, h2 em, .statement-section em { color: #e4c783; font-family: Georgia,serif; font-weight: 400; }
+.hero-lead { max-width: 600px; color: #b8b5ae; font-size: 16px; line-height: 1.8; }
+.hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 13px; margin-top: 30px; }
+.button-gold { display: inline-flex; align-items: center; justify-content: center; gap: 18px; min-height: 48px; }
+.button-gold:hover, .nav-cta:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.button-outline {
+  display: inline-flex; align-items: center; gap: 18px; justify-content: center;
+  border: 1px solid #5a503e; padding: 13px 18px; color: #eee7d9; font-size: 12px;
+}
+.button-outline:hover { border-color: #d8b56a; color: #f0d79b; }
+.hero-proof { display: flex; align-items: center; gap: 12px; margin-top: 42px; color: #888; font-size: 11px; }
+.proof-line { width: 36px; height: 1px; background: #d8b56a; }
+.hero-visual { position: relative; max-width: 470px; justify-self: end; width: 100%; }
+.hero-image-frame { height: min(590px,65vw); min-height: 420px; position: relative; border: 1px solid #6a5736; background: #191714; overflow: hidden; }
+.hero-image-frame:after { content:""; position:absolute; inset:0; background: linear-gradient(180deg,transparent 55%,rgba(0,0,0,.78)); pointer-events:none; }
+.hero-image-frame img { width:100%; height:100%; display:block; object-fit:cover; object-position:center 24%; }
+.image-caption { position:absolute; z-index:1; bottom:24px; left:25px; display:grid; gap:6px; }
+.image-caption span, .hero-index { color:#e4c783; font-size:9px; letter-spacing:.2em; }
+.image-caption b { font-size:18px; font-weight:600; }
+.hero-stamp { position:absolute; left:-42px; bottom:90px; width:100px; height:100px; display:grid; place-content:center; text-align:center; background:#d8b56a; color:#17120a; border-radius:50%; font-size:10px; letter-spacing:.12em; }
+.hero-stamp b { font-size:23px; line-height:1.1; }
+.hero-index { text-align:right; padding-top:13px; }
+.hero-bottom { grid-column:1/-1; display:flex; justify-content:space-between; padding-top:25px; margin-top:28px; border-top:1px solid #292929; color:#777; font-size:9px; letter-spacing:.18em; }
+
+.section-pad { padding: 100px 8vw; }
+.intro-section { border-top:1px solid #242424; background:#10100f; }
+.intro-grid { display:grid; grid-template-columns:1fr 1fr; gap:8vw; margin-top:25px; align-items:start; }
+h2 { margin:0; font-size:clamp(32px,4vw,52px); line-height:1.1; letter-spacing:-.04em; font-weight:600; }
+.section-lead { color:#e3dfd6; font-size:19px; line-height:1.6; margin:0 0 18px; }
+.body-copy, .section-heading>p { color:#a9a69e; line-height:1.85; font-size:14px; }
+.text-link { display:inline-flex; gap:18px; margin-top:18px; color:#e4c783; font-size:12px; }
+.solutions-section { background:#090909; }
+.section-heading { display:flex; justify-content:space-between; align-items:end; gap:40px; margin-bottom:42px; }
+.section-heading h2 { margin-top:17px; }
+.section-heading>p { max-width:360px; margin:0; }
+.solution-grid { display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid #393329; border-bottom:1px solid #393329; }
+.solution-card { min-height:300px; padding:25px 22px; border-right:1px solid #302b22; position:relative; }
+.solution-card:first-child { border-left:1px solid #302b22; }
+.card-no, .service-number { color:#d8b56a; font-size:11px; letter-spacing:.15em; }
+.solution-icon { color:#d8b56a; font-size:28px; margin:35px 0 22px; }
+.solution-card h3, .service-row h3, .process-grid h3 { font-size:17px; margin:0 0 12px; font-weight:600; }
+.solution-card p, .service-row p, .process-grid p { color:#a9a69e; font-size:13px; line-height:1.8; }
+.solution-card>a { position:absolute; bottom:24px; color:#e4c783; font-size:11px; }
+.statement-section { padding:75px 12vw; text-align:center; background:linear-gradient(110deg,#211a10,#111 65%); border-top:1px solid #4b3c25; border-bottom:1px solid #4b3c25; }
+.statement-mark { color:#d8b56a; font-size:12px; letter-spacing:.2em; }
+.statement-section p { max-width:850px; margin:22px auto; font-size:clamp(26px,4vw,44px); line-height:1.25; }
+.statement-section>span { color:#8e887d; font-size:9px; letter-spacing:.2em; }
+.services-section { background:#10100f; }
+.service-list { border-top:1px solid #393329; }
+.service-row { display:grid; grid-template-columns:55px 1fr 160px 42px; align-items:center; gap:25px; padding:28px 0; border-bottom:1px solid #393329; }
+.service-row p { max-width:650px; margin:0; }
+.service-tag { color:#c7a968; font-size:9px; letter-spacing:.15em; text-align:right; }
+.round-arrow { width:40px; height:40px; display:grid; place-items:center; border:1px solid #5a503e; background:transparent; color:#e4c783; font-size:18px; }
+.round-arrow:hover { background:#d8b56a; color:#090909; }
+.fine-print { color:#777; font-size:11px; margin-top:20px; }
+.process-section { background:#090909; }
+.process-head { display:flex; justify-content:space-between; gap:40px; align-items:end; margin:20px 0 45px; }
+.process-head p { max-width:380px; color:#a9a69e; line-height:1.8; font-size:14px; }
+.process-grid { display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid #393329; }
+.process-grid>div { padding:25px 20px 0 0; }
+.process-grid span { color:#d8b56a; font-size:11px; letter-spacing:.15em; display:block; margin-bottom:32px; }
+.team-section { background:#11100e; }
+.team-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+.team-card { background:#171614; border:1px solid #302b22; }
+.team-photo { height:380px; overflow:hidden; background:#24211b; }
+.team-photo img { width:100%; height:100%; object-fit:cover; object-position:center 25%; display:block; transition:transform .5s; }
+.team-card:hover .team-photo img { transform:scale(1.035); }
+.team-meta { padding:22px; }
+.team-meta span { color:#d8b56a; font-size:9px; letter-spacing:.18em; }
+.team-meta h3 { font-size:19px; margin:10px 0; }
+.team-meta p { color:#a9a69e; font-size:13px; line-height:1.7; margin:0; }
+.affiliate-section { display:grid; grid-template-columns:1fr 1fr; gap:8vw; background:linear-gradient(110deg,#1c170f,#0d0d0c); border-top:1px solid #443721; border-bottom:1px solid #443721; }
+.affiliate-section .section-lead { margin-top:0; }
+.contact-section { display:grid; grid-template-columns:.8fr 1fr; gap:8vw; background:#0b0b0b; }
+.contact-intro h2 { margin:22px 0; }
+.contact-intro>p { color:#aaa69e; line-height:1.8; max-width:420px; }
+.contact-details { display:grid; gap:13px; margin-top:32px; }
+.contact-details a { color:#e4c783; font-size:13px; }
+.contact-form { display:grid; gap:17px; padding:30px; border:1px solid #393329; background:#121211; }
+.contact-form label { display:grid; gap:8px; color:#d8d2c6; font-size:11px; letter-spacing:.04em; }
+.contact-form input, .contact-form select, .contact-form textarea {
+  width:100%; padding:13px 14px; border:1px solid #393939; background:#191919;
+  color:#f6f4ef; outline:none; border-radius:0; font-size:13px;
+}
+.contact-form input:focus, .contact-form select:focus, .contact-form textarea:focus { border-color:#d8b56a; }
+.contact-form textarea { resize:vertical; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.form-submit { justify-self:start; }
+.form-feedback { color:#888; font-size:10px; line-height:1.6; margin:0; }
+.site-footer { padding:55px 8vw 25px; background:#050505; border-top:1px solid #302b22; }
+.footer-top { display:flex; justify-content:space-between; align-items:center; gap:30px; padding-bottom:38px; border-bottom:1px solid #292929; }
+.footer-top>p { max-width:360px; color:#999; font-size:12px; line-height:1.7; }
+.footer-cta { color:#e4c783; font-size:12px; }
+.footer-bottom { display:flex; justify-content:space-between; gap:18px; padding-top:22px; color:#777; font-size:10px; }
+.footer-bottom a { color:#c9a963; }
+
+.back-link { background:transparent; border:0; color:#d8b56a; padding:0; margin-bottom:24px; font-size:12px; }
+.auth-screen { min-height:100vh; display:grid; place-items:center; padding:28px 16px; }
+@media (max-width: 900px) {
+  .main-nav { gap:13px; }
+  .main-nav a { font-size:11px; }
+  .hero-section { padding-left:5vw; padding-right:5vw; gap:4vw; }
+  .section-pad { padding:78px 6vw; }
+  .solution-grid { grid-template-columns:repeat(2,1fr); }
+  .solution-card:nth-child(3) { border-left:1px solid #302b22; }
+  .team-photo { height:310px; }
+}
+@media (max-width: 700px) {
+  .site-header { padding:16px 5vw; }
+  .menu-toggle { display:block; }
+  .main-nav { display:none; position:absolute; z-index:10; top:105px; left:0; right:0; padding:22px 6vw; background:#10100f; border-bottom:1px solid #55452a; flex-direction:column; align-items:stretch; }
+  .main-nav.nav-open { display:flex; }
+  .main-nav a { padding:8px 0; font-size:13px; }
+  .nav-cta { align-self:flex-start; }
+  .hero-section { grid-template-columns:1fr; padding-top:58px; }
+  .hero-section h1 { font-size:clamp(39px,12vw,62px); }
+  .hero-visual { justify-self:center; max-width:430px; margin-top:25px; }
+  .hero-image-frame { height:520px; }
+  .hero-stamp { left:-12px; width:82px; height:82px; }
+  .hero-bottom { font-size:8px; }
+  .intro-grid, .affiliate-section, .contact-section { grid-template-columns:1fr; gap:30px; }
+  .section-heading, .process-head { display:block; }
+  .section-heading>p, .process-head p { margin-top:18px; }
+  .solution-grid { grid-template-columns:1fr; }
+  .solution-card, .solution-card:first-child { border-left:1px solid #302b22; border-right:1px solid #302b22; min-height:250px; }
+  .service-row { grid-template-columns:34px 1fr 38px; gap:12px; }
+  .service-tag { grid-column:2; grid-row:2; text-align:left; }
+  .round-arrow { grid-column:3; grid-row:1 / span 2; }
+  .process-grid { grid-template-columns:1fr 1fr; row-gap:20px; }
+  .team-grid { grid-template-columns:1fr; max-width:480px; }
+  .team-photo { height:430px; }
+  .form-row { grid-template-columns:1fr; }
+  .contact-form { padding:20px; }
+  .footer-top, .footer-bottom { align-items:flex-start; flex-direction:column; }
+  .section-pad { padding:65px 6vw; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } *, *::before, *::after { transition:none !important; } }
+
+
+/* SKILL CARTEL / CINEMATIC CONSULTING DESIGN LAYER */
+#publicSite { background:#070707; color:#f5f1e8; font-family:Inter,Arial,sans-serif; }
+#publicSite .announcement { padding:8px 5vw; background:#100e0a; color:#d9b66d; font-size:9px; letter-spacing:.18em; }
+#publicSite .site-header { max-width:none; padding:17px 6vw; position:sticky; top:0; z-index:30; backdrop-filter:blur(16px); background:rgba(7,7,7,.88); border-bottom:1px solid rgba(219,185,112,.14); }
+#publicSite .brand-symbol { width:36px; height:36px; border-radius:2px; font-family:Georgia,serif; font-weight:400; }
+#publicSite .site-brand b { font-size:11px; letter-spacing:.25em; }
+#publicSite .site-brand small { font-size:8px; letter-spacing:.18em; }
+#publicSite .main-nav a { font-size:11px; letter-spacing:.03em; }
+#publicSite .nav-cta, #publicSite .button-gold { border-radius:3px; background:linear-gradient(110deg,#f4d58f,#c79b4c); box-shadow:0 5px 25px rgba(206,163,82,.12); transition:transform .25s,box-shadow .25s,filter .25s; }
+#publicSite .nav-cta:hover, #publicSite .button-gold:hover { transform:translateY(-2px); box-shadow:0 9px 30px rgba(206,163,82,.22); }
+#publicSite .hero-section { max-width:none; min-height:720px; padding:90px 8vw 35px; grid-template-columns:1fr .86fr; gap:5vw; background:radial-gradient(ellipse at 77% 43%,rgba(164,122,49,.14),transparent 35%),radial-gradient(ellipse at 18% 32%,rgba(115,115,115,.12),transparent 30%),#070707; isolation:isolate; }
+#publicSite .hero-section:before { content:""; position:absolute; z-index:-1; width:65vw; height:52vw; max-height:650px; right:4%; top:0; opacity:.56; filter:blur(22px); background:conic-gradient(from 210deg at 50% 50%,transparent 0 13%,rgba(231,222,205,.15) 17%,transparent 24% 37%,rgba(196,151,76,.14) 43%,transparent 54% 70%,rgba(220,216,205,.11) 78%,transparent 86%); border-radius:50%; transform:rotate(-18deg); }
+#publicSite .hero-section:after { content:""; position:absolute; z-index:-1; inset:0; pointer-events:none; background:linear-gradient(90deg,#070707 0%,rgba(7,7,7,.12) 55%,#070707 100%); }
+#publicSite .hero-copy { max-width:760px; padding:20px 0; }
+#publicSite .hero-section h1 { max-width:780px; font-family:Georgia,'Times New Roman',serif; font-weight:400; font-size:clamp(52px,7.2vw,100px); letter-spacing:-.065em; line-height:.99; }
+#publicSite .hero-section h1 em, #publicSite h2 em, #publicSite .statement-section em { font-style:italic; }
+#publicSite .hero-lead { max-width:550px; font-size:14px; line-height:1.9; color:#b8b2a7; }
+#publicSite .hero-proof { margin-top:35px; }
+#publicSite .hero-visual { max-width:500px; }
+#publicSite .hero-image-frame { min-height:480px; height:min(560px,54vw); border-color:rgba(221,183,105,.45); background:radial-gradient(circle at 50% 35%,#44351e 0,#19150e 31%,#0b0b0a 70%); box-shadow:0 25px 90px rgba(0,0,0,.48); }
+#publicSite .hero-image-frame:before { content:""; position:absolute; inset:8%; border:1px solid rgba(221,183,105,.17); border-radius:50%; transform:rotate(-25deg) scaleX(.7); }
+#publicSite .hero-image-frame:after { background:linear-gradient(180deg,rgba(0,0,0,.08),transparent 38%,rgba(0,0,0,.86)); }
+#publicSite .hero-image-frame.photo-fallback:before { inset:12%; border:1px solid rgba(221,183,105,.2); box-shadow:0 0 90px rgba(212,166,82,.08),inset 0 0 90px rgba(212,166,82,.06); }
+#publicSite .hero-image-frame.photo-fallback:after { content:"SKILL\A CARTEL"; white-space:pre; display:grid; place-items:center; text-align:center; color:rgba(239,211,151,.9); font:clamp(34px,5vw,64px)/1.05 Georgia,serif; letter-spacing:.12em; text-shadow:0 0 40px rgba(216,181,106,.35); background:radial-gradient(ellipse at 50% 50%,rgba(207,159,77,.18),transparent 50%),linear-gradient(135deg,rgba(255,255,255,.05),transparent 45%); }
+#publicSite .hero-stamp { left:-36px; bottom:88px; width:88px; height:88px; background:#d8b56a; border:5px solid #111; box-shadow:0 0 0 1px #d8b56a; }
+#publicSite .hero-bottom { letter-spacing:.22em; }
+#publicSite .section-pad { padding:110px 8vw; }
+#publicSite .intro-section, #publicSite .team-section { background:#10100f; }
+#publicSite h2 { font-family:Georgia,'Times New Roman',serif; font-weight:400; font-size:clamp(36px,4.6vw,60px); letter-spacing:-.045em; }
+#publicSite .section-kicker { font-size:9px; letter-spacing:.25em; }
+#publicSite .intro-grid { gap:9vw; }
+#publicSite .section-lead { font-size:18px; }
+#publicSite .body-copy, #publicSite .section-heading>p { font-size:13px; }
+#publicSite .solution-grid { grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; border:0; }
+#publicSite .solution-card, #publicSite .solution-card:first-child { min-height:295px; border:1px solid #29251d; background:linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.006)); padding:26px 23px; overflow:hidden; transition:transform .3s,border-color .3s,background .3s; }
+#publicSite .solution-card:hover { transform:translateY(-6px); border-color:#9b7941; background:linear-gradient(145deg,rgba(216,181,106,.09),rgba(255,255,255,.01)); }
+#publicSite .solution-icon { width:54px; height:54px; display:grid; place-items:center; margin:28px 0 23px; border:1px solid rgba(216,181,106,.32); border-radius:50%; background:radial-gradient(circle,rgba(216,181,106,.16),transparent 70%); font-family:Georgia,serif; font-size:26px; }
+#publicSite .statement-section { position:relative; overflow:hidden; background:radial-gradient(ellipse at 50% 0,rgba(205,159,77,.16),transparent 55%),linear-gradient(110deg,#19140d,#0c0c0b 70%); padding:88px 12vw; }
+#publicSite .statement-section:before, #publicSite .statement-section:after { content:""; position:absolute; width:360px; height:360px; border:1px solid rgba(216,181,106,.11); border-radius:50%; top:50%; transform:translateY(-50%); }
+#publicSite .statement-section:before { left:-230px; box-shadow:0 0 0 30px rgba(216,181,106,.025),0 0 0 60px rgba(216,181,106,.02); }
+#publicSite .statement-section:after { right:-230px; box-shadow:0 0 0 30px rgba(216,181,106,.025),0 0 0 60px rgba(216,181,106,.02); }
+#publicSite .statement-mark { font-family:Georgia,serif; }
+#publicSite .service-row { grid-template-columns:55px 1fr 170px 42px; padding:30px 0; transition:padding .25s; }
+#publicSite .service-row:hover { padding-left:10px; }
+#publicSite .service-row h3 { font-family:Georgia,serif; font-size:21px; font-weight:400; }
+#publicSite .round-arrow { border-radius:50%; }
+#publicSite .process-grid { gap:12px; border:0; }
+#publicSite .process-grid>div { position:relative; min-height:180px; padding:25px 22px; border:1px solid #29251d; background:linear-gradient(145deg,rgba(255,255,255,.025),transparent); }
+#publicSite .process-grid span { margin-bottom:38px; }
+#publicSite .team-grid { gap:16px; }
+#publicSite .team-card { overflow:hidden; background:#171614; border:1px solid #29251d; }
+#publicSite .team-photo { height:360px; background:radial-gradient(circle at 50% 35%,#51432a,#201c15 60%,#111); position:relative; }
+#publicSite .team-photo.photo-fallback:after { content:"SC"; position:absolute; inset:0; display:grid; place-items:center; font:clamp(70px,9vw,120px) Georgia,serif; color:rgba(226,192,123,.48); letter-spacing:-.08em; background:radial-gradient(circle,rgba(216,181,106,.12),transparent 60%); }
+#publicSite .team-meta { padding:23px; }
+#publicSite .team-meta h3 { font-family:Georgia,serif; font-weight:400; }
+#publicSite .affiliate-section { background:radial-gradient(ellipse at 0 50%,rgba(216,181,106,.12),transparent 45%),#100e0a; }
+#publicSite .contact-form { border-color:#393124; background:linear-gradient(145deg,#15130f,#0e0e0d); box-shadow:0 20px 70px rgba(0,0,0,.24); }
+#publicSite .contact-form input, #publicSite .contact-form select, #publicSite .contact-form textarea { border-radius:2px; background:#10100f; }
+#publicSite .site-footer { background:#050505; }
+/* custom visual dashboard / original CSS-built graphics */
+#publicSite .visual-showcase { background:linear-gradient(180deg,#0a0a09,#11100d); border-top:1px solid #211e17; border-bottom:1px solid #211e17; }
+#publicSite .showcase-heading { display:flex; align-items:end; justify-content:space-between; gap:45px; margin-bottom:42px; }
+#publicSite .showcase-heading h2 { margin-top:18px; }
+#publicSite .showcase-heading>p { max-width:380px; margin:0 0 4px; color:#aaa59a; font-size:13px; line-height:1.9; }
+#publicSite .showcase-board { position:relative; padding:22px; border:1px solid #3a3020; border-radius:10px; background:radial-gradient(ellipse at 72% 10%,rgba(202,157,78,.12),transparent 36%),linear-gradient(145deg,#171612,#0a0a09 72%); box-shadow:0 28px 90px rgba(0,0,0,.42); overflow:hidden; }
+#publicSite .showcase-board:before { content:""; position:absolute; inset:0; pointer-events:none; opacity:.22; background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px); background-size:42px 42px; mask-image:linear-gradient(90deg,transparent,#000 50%,transparent); }
+#publicSite .board-top, #publicSite .board-bottom { position:relative; display:flex; justify-content:space-between; gap:18px; color:#9e9584; font-size:8px; letter-spacing:.18em; }
+#publicSite .board-top i { display:inline-block; width:6px; height:6px; border-radius:50%; background:#d8b56a; box-shadow:0 0 12px #d8b56a; margin-right:8px; }
+#publicSite .board-top b, #publicSite .board-bottom b { color:#d8b56a; }
+#publicSite .board-main { position:relative; display:grid; grid-template-columns:.78fr 1.22fr; gap:22px; padding:28px 0; }
+#publicSite .board-side { min-height:390px; padding:24px; border:1px solid #383021; background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.005)); position:relative; overflow:hidden; }
+#publicSite .board-label, #publicSite .mini-panel-head { color:#d8b56a; font-size:8px; letter-spacing:.18em; }
+#publicSite .board-side h3 { margin:20px 0 12px; font:clamp(30px,3.4vw,45px)/1.05 Georgia,serif; font-weight:400; }
+#publicSite .board-side p, #publicSite .mini-panel p { color:#a8a196; font-size:11px; line-height:1.8; max-width:290px; }
+#publicSite .skill-tags { display:flex; flex-wrap:wrap; gap:7px; margin-top:20px; }
+#publicSite .skill-tags b { padding:6px 9px; border:1px solid #49402f; color:#d8c9a8; font-size:8px; font-weight:400; letter-spacing:.08em; }
+#publicSite .orbit-art { position:absolute; width:210px; height:150px; right:8px; bottom:-16px; }
+#publicSite .orbit { position:absolute; inset:22px 0; border:1px solid rgba(216,181,106,.28); border-radius:50%; transform:rotate(-28deg); }
+#publicSite .orbit-b { inset:0 28px; transform:rotate(54deg); border-color:rgba(216,181,106,.18); }
+#publicSite .orbit-core { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:54px; height:54px; display:grid; place-items:center; border-radius:50%; color:#f0d79b; background:radial-gradient(circle,#5c4828,#18140d); border:1px solid #b38c4a; font:20px Georgia,serif; box-shadow:0 0 30px rgba(216,181,106,.2); }
+#publicSite .orbit-dot { position:absolute; width:7px; height:7px; border-radius:50%; background:#f0d79b; box-shadow:0 0 12px #d8b56a; }
+#publicSite .dot-a { left:20px; top:38px; } #publicSite .dot-b { right:24px; top:25px; } #publicSite .dot-c { right:45px; bottom:20px; }
+#publicSite .board-flow { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+#publicSite .mini-panel { min-height:390px; padding:18px; border:1px solid #383021; background:rgba(0,0,0,.26); }
+#publicSite .mini-panel-head { display:flex; justify-content:space-between; }
+#publicSite .offer-visual, #publicSite .reach-visual { position:relative; height:220px; margin:12px 0 18px; display:grid; place-items:center; overflow:hidden; background:radial-gradient(circle,rgba(216,181,106,.11),transparent 68%); }
+#publicSite .offer-sheet { z-index:1; width:145px; height:180px; padding:15px; background:linear-gradient(145deg,#d8c39b,#9b7845); color:#17130d; transform:rotate(-7deg); box-shadow:12px 18px 32px rgba(0,0,0,.45); display:flex; flex-direction:column; }
+#publicSite .sheet-mark { font:12px Georgia,serif; letter-spacing:.2em; }
+#publicSite .offer-sheet>b { margin-top:28px; font:17px/1.12 Georgia,serif; }
+#publicSite .offer-sheet small { margin-top:9px; font-size:6px; letter-spacing:.12em; }
+#publicSite .sheet-lines { margin-top:auto; display:grid; gap:5px; }
+#publicSite .sheet-lines i { display:block; height:2px; background:rgba(23,19,13,.35); }
+#publicSite .sheet-lines i:nth-child(2) { width:75%; } #publicSite .sheet-lines i:nth-child(3) { width:52%; }
+#publicSite .offer-orbit { position:absolute; width:210px; height:130px; border:1px solid rgba(216,181,106,.3); border-radius:50%; transform:rotate(25deg); }
+#publicSite .reach-visual svg { position:absolute; width:100%; height:100%; opacity:.8; }
+#publicSite .reach-node { position:absolute; z-index:1; padding:8px 10px; background:#17140e; border:1px solid #8f713e; color:#e8d4aa; font-size:7px; letter-spacing:.1em; }
+#publicSite .node-one { left:3%; top:45%; } #publicSite .node-two { right:3%; top:45%; } #publicSite .node-three { left:50%; top:4%; transform:translateX(-50%); }
+#publicSite .mini-panel h4 { margin:0 0 5px; font:18px Georgia,serif; font-weight:400; }
+#publicSite .mini-panel p { margin:0; font-size:10px; }
+#publicSite .board-bottom { border-top:1px solid #393124; padding-top:16px; }
+@media(max-width:900px) {
+ #publicSite .hero-section { min-height:auto; padding-top:70px; }
+ #publicSite .solution-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ #publicSite .board-main { grid-template-columns:1fr; }
+ #publicSite .board-side { min-height:310px; }
+ #publicSite .orbit-art { right:8%; }
+}
+@media(max-width:700px) {
+ #publicSite .site-header { position:relative; }
+ #publicSite .main-nav { top:74px; }
+ #publicSite .hero-section { grid-template-columns:1fr; padding:60px 7vw 28px; }
+ #publicSite .hero-section h1 { font-size:clamp(47px,13vw,72px); }
+ #publicSite .hero-visual { max-width:100%; }
+ #publicSite .hero-image-frame { min-height:390px; height:105vw; max-height:500px; }
+ #publicSite .hero-stamp { left:-8px; bottom:76px; width:76px; height:76px; }
+ #publicSite .section-pad { padding:72px 7vw; }
+ #publicSite .solution-grid, #publicSite .team-grid { grid-template-columns:1fr; }
+ #publicSite .solution-card, #publicSite .solution-card:first-child { min-height:245px; }
+ #publicSite .showcase-heading { display:block; }
+ #publicSite .showcase-heading>p { margin-top:18px; }
+ #publicSite .showcase-board { padding:14px; }
+ #publicSite .board-main { padding:18px 0; }
+ #publicSite .board-side { min-height:320px; padding:18px; }
+ #publicSite .board-flow { grid-template-columns:1fr; }
+ #publicSite .mini-panel { min-height:350px; }
+ #publicSite .offer-visual, #publicSite .reach-visual { height:190px; }
+ #publicSite .board-top, #publicSite .board-bottom { font-size:7px; letter-spacing:.1em; }
+ #publicSite .board-bottom span:last-child { display:none; }
+ #publicSite .team-photo { height:390px; }
+}
+
+  </style>
+</head>
+
+<body>
+
+<div id="publicSite">
+  <div class="announcement">A practical ecosystem for turning expertise into opportunity</div>
+  <header class="site-header">
+    <a class="site-brand" href="#top" aria-label="Skill Cartel home"><span class="brand-symbol">SC</span><span><b>SKILL CARTEL</b><small>BUILD FROM WHAT YOU KNOW</small></span></a>
+    <button class="menu-toggle" id="mobileMenuButton" aria-label="Open navigation">☰</button>
+    <nav id="mainNav" class="main-nav">
+      <a href="#approach">Our approach</a><a href="#solutions">Solutions</a><a href="#services">Services</a><a href="#team">Our team</a><a href="#contact">Contact</a>
+      <button class="nav-cta" data-open-auth>AI access <span>↗</span></button>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero-section">
+      <div class="hero-copy">
+        <div class="eyebrow"><span></span> SKILLS. STRATEGY. COMMERCE.</div>
+        <h1>Turn your skills into <em>something valuable.</em></h1>
+        <p class="hero-lead">We help people identify what they know, shape it into marketable offers, create digital products and build the systems to reach customers.</p>
+        <div class="hero-actions"><button class="button-gold" data-open-auth>Explore Skill Cartel AI <span>↗</span></button><a class="button-outline" href="#approach">Discover our approach</a></div>
+        <div class="hero-proof"><span class="proof-line"></span><span>From personal capability to a considered business plan.</span></div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-image-frame"><img src="assets/muhammad-nouman.png" alt="Muhammad Nouman, Founder of Skill Cartel" onerror="this.style.display='none';this.parentElement.classList.add('photo-fallback')"><div class="image-caption"><span>FOUNDER</span><b>Muhammad Nouman</b></div></div>
+        <div class="hero-stamp"><span>IDEAS</span><b>→</b><span>INCOME</span></div>
+        <div class="hero-index">01 / STRATEGY & GROWTH</div>
+      </div>
+      <div class="hero-bottom"><span>INDEPENDENT THINKING. PRACTICAL EXECUTION.</span><span>SC / 2026</span></div>
+    </section>
+
+    <section class="intro-section section-pad" id="approach">
+      <div class="section-kicker">01 — OUR APPROACH</div>
+      <div class="intro-grid"><h2>Your experience is an asset.<br><em>Let's put it to work.</em></h2><div><p class="section-lead">Skill Cartel is built around a simple idea: valuable businesses can begin with skills people already have.</p><p class="body-copy">We bring skill discovery, business planning, digital product development and marketing guidance into one connected experience. Whether you want to build independently or work with a team, we help you move from possibility to a practical next step.</p><a class="text-link" href="#solutions">Explore the ecosystem <span>↗</span></a></div></div>
+    </section>
+
+    <section class="solutions-section section-pad" id="solutions">
+      <div class="section-heading"><div><div class="section-kicker">02 — THE ECOSYSTEM</div><h2>One skill. <em>Many possibilities.</em></h2></div><p>Structured support for the different stages of building and growing an online business.</p></div>
+      <div class="solution-grid">
+        <article class="solution-card"><span class="card-no">01</span><div class="solution-icon">◎</div><h3>Discover your value</h3><p>Identify your strengths, experience and the problems you can help people solve.</p><a href="#services">Explore <span>↗</span></a></article>
+        <article class="solution-card"><span class="card-no">02</span><div class="solution-icon">◈</div><h3>Build digital products</h3><p>Shape your knowledge into guides, templates, learning resources and product concepts.</p><a href="#services">Explore <span>↗</span></a></article>
+        <article class="solution-card"><span class="card-no">03</span><div class="solution-icon">⌁</div><h3>Market with purpose</h3><p>Develop content and marketing strategies for faceless or personal-brand channels.</p><a href="#services">Explore <span>↗</span></a></article>
+        <article class="solution-card"><span class="card-no">04</span><div class="solution-icon">↗</div><h3>Grow your business</h3><p>Plan your offer, pricing, customer journey and the systems behind sustainable growth.</p><a href="#services">Explore <span>↗</span></a></article>
+      </div>
+    </section>
+
+    <section class="visual-showcase section-pad" aria-label="Skill Cartel business-building workflow">
+      <div class="showcase-heading"><div><div class="section-kicker">A SYSTEM, NOT JUST AN IDEA</div><h2>Make the next move<br><em>with a clearer picture.</em></h2></div><p>Turn a rough idea into a focused direction: understand your strengths, shape an offer and plan how to reach the right audience.</p></div>
+      <div class="showcase-board">
+        <div class="board-top"><span><i></i> SKILL CARTEL / WORKSPACE</span><span>YOUR BUILDING JOURNEY <b>↗</b></span></div>
+        <div class="board-main">
+          <div class="board-side"><span class="board-label">01 / DISCOVER</span><h3>Start with<br>what you know.</h3><p>Map your strengths, experience and the problems you can help solve.</p><div class="skill-tags"><b>Knowledge</b><b>Experience</b><b>Interests</b></div><div class="orbit-art"><span class="orbit orbit-a"></span><span class="orbit orbit-b"></span><span class="orbit-core">SC</span><i class="orbit-dot dot-a"></i><i class="orbit-dot dot-b"></i><i class="orbit-dot dot-c"></i></div></div>
+          <div class="board-flow">
+            <article class="mini-panel offer-panel"><div class="mini-panel-head"><span>02 / BUILD AN OFFER</span><span>↗</span></div><div class="offer-visual"><div class="offer-sheet"><span class="sheet-mark">SC</span><b>Your knowledge.<br>Your next product.</b><small>GUIDE / TEMPLATE / COURSE</small><div class="sheet-lines"><i></i><i></i><i></i></div></div><div class="offer-orbit"></div></div><h4>Give your expertise a format.</h4><p>Package knowledge into something useful and clear.</p></article>
+            <article class="mini-panel reach-panel"><div class="mini-panel-head"><span>03 / REACH PEOPLE</span><span>↗</span></div><div class="reach-visual"><div class="reach-node node-one">CONTENT</div><div class="reach-node node-two">AUDIENCE</div><div class="reach-node node-three">OFFER</div><svg viewBox="0 0 320 130" role="img" aria-label="Illustrative connections between content, audience and offer"><path d="M60 64 C105 4 205 4 260 64 M60 64 C105 124 205 124 260 64 M60 64 L260 64" fill="none" stroke="#cda75e" stroke-width="1.5" stroke-dasharray="4 5"/><circle cx="60" cy="64" r="5" fill="#f0d79b"/><circle cx="160" cy="18" r="4" fill="#cda75e"/><circle cx="260" cy="64" r="5" fill="#f0d79b"/><circle cx="160" cy="110" r="4" fill="#cda75e"/></svg></div><h4>Build a path to your market.</h4><p>Connect useful content with the people who need your offer.</p></article>
+          </div>
+        </div>
+        <div class="board-bottom"><span>DISCOVER <b>→</b> CREATE <b>→</b> CONNECT <b>→</b> GROW</span><span>BUILT AROUND YOUR CAPABILITY</span></div>
+      </div>
+    </section>
+
+    <section class="statement-section"><div class="statement-mark">SC</div><p>Build a business around what you know — with a clearer plan for <em>what comes next.</em></p><span>SKILL CARTEL / OUR PRINCIPLE</span></section>
+
+    <section class="services-section section-pad" id="services">
+      <div class="section-heading"><div><div class="section-kicker">03 — WHAT WE DO</div><h2>Support for every <em>next step.</em></h2></div><p>Choose the level of support that matches your goals, resources and stage of business.</p></div>
+      <div class="service-list">
+        <article class="service-row"><div class="service-number">01</div><div><h3>Skill Cartel AI</h3><p>An AI business-building assistant to explore skills, opportunities, offers, pricing and practical action plans.</p></div><div class="service-tag">MEMBERSHIP ACCESS</div><button data-open-auth class="round-arrow" aria-label="Get AI access">↗</button></article>
+        <article class="service-row"><div class="service-number">02</div><div><h3>Digital product development</h3><p>Support with product concepts, educational resources, templates, positioning and sales messaging.</p></div><div class="service-tag">CREATE & PACKAGE</div><a href="#contact" class="round-arrow" aria-label="Ask about product development">↗</a></article>
+        <article class="service-row"><div class="service-number">03</div><div><h3>Marketing strategy</h3><p>Content planning, social media positioning, faceless account strategy, personal branding and audience development.</p></div><div class="service-tag">REACH & CONVERT</div><a href="#contact" class="round-arrow" aria-label="Ask about marketing">↗</a></article>
+        <article class="service-row"><div class="service-number">04</div><div><h3>Managed online business</h3><p>For selected partnerships, Skill Cartel can help operate and grow an online business under a written agreement. The proposed service model is a 40% share of agreed sales.</p></div><div class="service-tag">PARTNERSHIP MODEL</div><a href="#contact" class="round-arrow" aria-label="Discuss a partnership">↗</a></article>
+      </div>
+      <p class="fine-print">Service scope, eligibility, fees and partnership terms are confirmed individually before work begins. Business results are not guaranteed.</p>
+    </section>
+
+    <section class="process-section section-pad"><div class="section-kicker">04 — HOW IT WORKS</div><div class="process-head"><h2>A clear path from <em>skill to market.</em></h2><p>Start with your capability. Build a focused offer. Learn how to reach the people who need it.</p></div><div class="process-grid"><div><span>01</span><h3>Discover</h3><p>Map your skills, interests and experience.</p></div><div><span>02</span><h3>Validate</h3><p>Connect your strengths to a real customer need.</p></div><div><span>03</span><h3>Create</h3><p>Develop an offer or digital product with a clear purpose.</p></div><div><span>04</span><h3>Grow</h3><p>Market, learn from feedback and improve your approach.</p></div></div></section>
+
+    <section class="team-section section-pad" id="team"><div class="section-heading"><div><div class="section-kicker">05 — THE PEOPLE</div><h2>Meet the <em>team.</em></h2></div><p>A team focused on helping people turn knowledge, creativity and ambition into practical opportunities.</p></div><div class="team-grid">
+      <article class="team-card"><div class="team-photo"><img src="assets/muhammad-nouman.png" alt="Muhammad Nouman" onerror="this.style.display='none';this.parentElement.classList.add('photo-fallback')"></div><div class="team-meta"><span>FOUNDER</span><h3>Muhammad Nouman</h3><p>Company vision, direction and platform development.</p></div></article>
+      <article class="team-card"><div class="team-photo"><img src="assets/irfan-malik.png" alt="Irfan Malik" onerror="this.style.display='none';this.parentElement.classList.add('photo-fallback')"></div><div class="team-meta"><span>CUSTOMER SERVICE</span><h3>Irfan Malik</h3><p>Customer assistance and service coordination.</p></div></article>
+      <article class="team-card"><div class="team-photo"><img src="assets/syed-shayan-bashah.png" alt="Syed Shayan-Bashah" onerror="this.style.display='none';this.parentElement.classList.add('photo-fallback')"></div><div class="team-meta"><span>CEO & MARKETING</span><h3>Syed Shayan-Bashah</h3><p>Business leadership and marketing direction.</p></div></article>
+    </div></section>
+
+    <section class="affiliate-section section-pad"><div><div class="section-kicker">06 — PARTNER WITH US</div><h2>Build together.<br><em>Grow together.</em></h2></div><div><p class="section-lead">We are developing partnership and affiliate opportunities for people who want to grow alongside the Skill Cartel ecosystem.</p><p class="body-copy">Affiliate participation, referral tracking, commission rates and payment terms will be governed by published programme rules and a written agreement.</p><a class="button-outline" href="#contact">Register your interest <span>↗</span></a></div></section>
+
+    <section class="contact-section section-pad" id="contact"><div class="contact-intro"><div class="section-kicker">07 — START A CONVERSATION</div><h2>Let's discuss<br><em>what you can build.</em></h2><p>Tell us what you are working on, what support you need or how you would like to collaborate.</p><div class="contact-details"><a href="mailto:SkillCartelAi@proton.me">SkillCartelAi@proton.me</a><a href="https://wa.me/923415456677" target="_blank" rel="noopener">+92 341 5456677 · WhatsApp</a></div></div>
+      <form class="contact-form" id="contactForm"><div class="form-row"><label>Full name<input name="fullName" type="text" autocomplete="name" placeholder="Your full name" required maxlength="100"></label><label>Email address<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required maxlength="160"></label></div><div class="form-row"><label>Country<input name="country" type="text" autocomplete="country-name" placeholder="Your country" required maxlength="80"></label><label>Inquiry type<select name="inquiryType" required><option value="" disabled selected>Select an inquiry</option><option>AI Access</option><option>Business Management</option><option>Affiliate Partnership</option><option>Digital Products</option><option>Marketing Services</option><option>General Inquiry</option></select></label></div><label>Subject<input name="subject" type="text" placeholder="How can we help?" required maxlength="150"></label><label>Message<textarea name="message" rows="5" placeholder="Tell us a little about your goals..." required maxlength="3000"></textarea></label><button type="submit" class="button-gold form-submit">Prepare enquiry <span>↗</span></button><p id="contactFeedback" class="form-feedback" aria-live="polite">Submitting this form opens your email application with the details addressed to Skill Cartel.</p></form>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="footer-top"><a class="site-brand" href="#top"><span class="brand-symbol">SC</span><span><b>SKILL CARTEL</b><small>BUILD FROM WHAT YOU KNOW</small></span></a><p>Turning capability into opportunity through strategy, digital products and business support.</p><a class="footer-cta" href="#contact">Talk to our team ↗</a></div><div class="footer-bottom"><span>© 2026 Skill Cartel. All rights reserved.</span><span><a href="mailto:SkillCartelAi@proton.me">Email</a> · <a href="https://wa.me/923415456677" target="_blank" rel="noopener">WhatsApp</a></span><span>Built for a global audience.</span></div></footer>
+</div>
+
+<section id="authScreen" class="auth-screen hidden">
+  <div class="auth-card">
+    <button type="button" class="back-link" id="backToWebsite">← Back to website</button>
+
+    <div class="brand auth-brand">
+      <div class="mark">SC</div>
+      <div>
+        <strong>SKILL CARTEL</strong>
+        <small>SKILLS → OPPORTUNITY</small>
+      </div>
+    </div>
+
+    <div class="auth-intro">
+      <div class="eyebrow">Your skills have value</div>
+      <h1>Build something<br><span class="gold">with what you know.</span></h1>
+      <p>Create an account to keep your progress, or explore as a guest.</p>
+    </div>
+
+    <div class="auth-tabs">
+      <button type="button" id="showSignup" class="auth-tab active">Create account</button>
+      <button type="button" id="showLogin" class="auth-tab">Sign in</button>
+    </div>
+
+    <form id="authForm" class="auth-form">
+      <label for="authEmail">Email address</label>
+      <input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com" required>
+
+      <label for="authPassword">Password</label>
+      <input id="authPassword" type="password" autocomplete="new-password" minlength="8" placeholder="At least 8 characters" required>
+
+      <button id="authSubmit" class="auth-primary" type="submit">Create account</button>
+    </form>
+
+    <div id="authMessage" class="auth-message" aria-live="polite"></div>
+
+    <div class="auth-divider"><span>OR</span></div>
+
+    <button type="button" id="guestBtn" class="guest-button">Continue as Guest</button>
+
+    <p class="auth-terms">
+      By continuing, you agree to use Skill Cartel responsibly.
+      Never share passwords, payment details, or sensitive personal information in chat.
+    </p>
+
+  </div>
+</section>
+<div class="wrap hidden" id="appWrap">
+
+  <header>
+    <div class="brand">
+      <div class="mark">SC</div>
+      <div>
+        <strong>SKILL CARTEL</strong>
+        <small>SKILLS → OPPORTUNITY</small>
+      </div>
+    </div>
+
+    <div class="account-actions">
+      <span class="status">● AI EXPERIENCE</span>
+      <span id="accountLabel" class="account-label"></span>
+      <button class="ghost" id="accountAction" type="button">Sign out</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Your skills have value</div>
+    <h1>Turn what you know into<br><span class="gold">what you can build.</span></h1>
+    <p>
+      Discover your strengths, identify a real customer problem,
+      and create a practical offer with your AI business-building assistant.
+    </p>
+  </section>
+
+  <main class="layout">
+
+    <aside class="side">
+      <h2>YOUR JOURNEY</h2>
+
+      <div class="step">
+        <span class="num">01</span>
+        <span><b>Discover</b><br>Identify your genuine skills.</span>
+      </div>
+
+      <div class="step">
+        <span class="num">02</span>
+        <span><b>Analyze</b><br>Explore realistic opportunities.</span>
+      </div>
+
+      <div class="step">
+        <span class="num">03</span>
+        <span><b>Build</b><br>Create an offer and pricing.</span>
+      </div>
+
+      <div class="step">
+        <span class="num">04</span>
+        <span><b>Sell</b><br>Plan outreach and delivery.</span>
+      </div>
+
+      <div class="step">
+        <span class="num">05</span>
+        <span><b>Improve</b><br>Review results in Sell Mode.</span>
+      </div>
+
+      <div class="side-note">
+        <b>Start with what you have.</b><br>
+        Skill Cartel helps you plan and test an idea.
+        It does not guarantee customers, income, or business success.
+      </div>
+    </aside>
+
+    <section class="chat">
+
+      <div class="chat-head">
+        <div>
+          <strong>Skill Cartel AI</strong>
+          <small>Business discovery assistant</small>
+        </div>
+
+        <div class="actions">
+          <button class="ghost" id="exportBtn" title="Download this conversation">Export</button>
+          <button class="ghost" id="clearBtn" title="Clear this conversation">New chat</button>
+        </div>
+      </div>
+
+      <div id="messages" aria-live="polite">
+        <div class="msg bot">Welcome to Skill Cartel.
+
+You may have a valuable business opportunity hiding inside something you already know how to do.
+
+I'll ask one question at a time, understand your real abilities, and help you explore a practical offer.
+
+To begin: what skill, activity, or type of problem-solving do people already come to you for?</div>
+      </div>
+
+      <div id="typing" class="typing hidden">Skill Cartel is thinking…</div>
+
+      <div class="chips">
+        <button class="chip" data-text="START">START</button>
+        <button class="chip" data-text="ANALYZE">ANALYZE</button>
+        <button class="chip" data-text="BUILD MY OFFER">BUILD MY OFFER</button>
+        <button class="chip" data-text="BUILD MY SALES SYSTEM">BUILD MY SALES SYSTEM</button>
+        <button class="chip" data-text="GENERATE MY BLUEPRINT">GENERATE MY BLUEPRINT</button>
+        <button class="chip" data-text="SELL MODE">SELL MODE</button>
+      </div>
+
+      <form class="composer" id="chatForm">
+        <input
+          id="fileInput"
+          type="file"
+          accept=".txt,.md,.csv,.json,text/plain,text/markdown,text/csv,application/json"
+          class="hidden"
+        >
+
+        <button class="ghost" id="attachBtn" type="button" title="Attach a text file">＋ File</button>
+
+        <input
+          id="prompt"
+          maxlength="4000"
+          autocomplete="off"
+          placeholder="Tell Skill Cartel about your skills..."
+          aria-label="Message Skill Cartel"
+        >
+
+        <button id="send" type="submit">Send</button>
+      </form>
+
+      <div id="fileStatus" style="padding:0 16px 12px;color:#a7a7a7;font-size:12px;background:#0e0e0e"></div>
+
+    </section>
+  </main>
+
+  <p class="foot">
+    Prototype v1.0 · Avoid sharing passwords, payment details, identity documents,
+    or confidential business information. AI responses can be inaccurate;
+    verify important decisions.
+  </p>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  // SUPABASE CONFIGURATION
+  const SUPABASE_URL = "https://gssguxwskyvmoppnuowk.supabase.co";
+
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_4_IlB-g6jPafJKCb9c4lug_kBefbYwN";
+
+  // CLOUDFLARE WORKER URL
+  const API_URL = "https://skill-cartel-api.panzymeal.workers.dev/";
+
+  const STORAGE_KEY = "skill-cartel-chat-v2";
+
+  const messagesEl = document.getElementById("messages");
+  const form = document.getElementById("chatForm");
+  const input = document.getElementById("prompt");
+  const typing = document.getElementById("typing");
+  const send = document.getElementById("send");
+  const fileInput = document.getElementById("fileInput");
+  const attachBtn = document.getElementById("attachBtn");
+  const fileStatus = document.getElementById("fileStatus");
+
+  let history = [];
+  let selectedFile = null;
+  let supabaseClient = null;
+  let currentUser = null;
+  let conversationId = null;
+  let authMode = "signup";
+
+  const authScreen = document.getElementById("authScreen");
+  const publicSite = document.getElementById("publicSite");
+  const appWrap = document.getElementById("appWrap");
+  const authMessage = document.getElementById("authMessage");
+  const authForm = document.getElementById("authForm");
+  const authSubmit = document.getElementById("authSubmit");
+  const accountAction = document.getElementById("accountAction");
+
+  function setAuthMessage(message, isError = false) {
+    authMessage.textContent = message;
+    authMessage.style.color = isError ? "#ffb4a9" : "#f0d79b";
+  }
+
+  function setAuthMode(mode) {
+    authMode = mode;
+
+    document.getElementById("showSignup").classList.toggle("active", mode === "signup");
+    document.getElementById("showLogin").classList.toggle("active", mode === "login");
+
+    authSubmit.textContent = mode === "signup" ? "Create account" : "Sign in";
+
+    document.getElementById("authPassword").autocomplete =
+      mode === "signup" ? "new-password" : "current-password";
+
+    setAuthMessage("");
+  }
+
+  document.getElementById("showSignup").addEventListener("click", () => setAuthMode("signup"));
+  document.getElementById("showLogin").addEventListener("click", () => setAuthMode("login"));
+
+  async function loadSavedConversation() {
+    history = [];
+    conversationId = null;
+    messagesEl.innerHTML = "";
+
+    const { data, error } = await supabaseClient
+      .from("conversations")
+      .select("id,messages")
+      .eq("user_id", currentUser.id)
+      .order("updated_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (error) {
+      console.error("Conversation load error:", error);
+
+      render(
+        "model",
+        "Welcome to Skill Cartel. Your chat is ready. Conversation syncing is not available right now."
+      );
+
+      return;
+    }
+
+    if (data && Array.isArray(data.messages)) {
+      conversationId = data.id;
+
+      history = data.messages
+        .filter(m =>
+          m &&
+          ["user", "model"].includes(m.role) &&
+          typeof m.text === "string"
+        )
+        .slice(-20);
+
+      history.forEach(m => {
+        render(m.role === "user" ? "user" : "model", m.text);
+      });
+
+    } else {
+      render(
+        "model",
+        "Welcome to Skill Cartel. You may have a valuable business opportunity hiding inside something you already know how to do.\n\nI'll ask one question at a time, understand your real abilities, and help you explore a practical offer.\n\nTo begin: what skill, activity, or type of problem-solving do people already come to you for?"
+      );
+    }
+  }
+
+  async function saveConversation() {
+    if (!currentUser || !history.length) return;
+
+    try {
+      localStorage.setItem(
+        STORAGE_KEY + "-" + currentUser.id,
+        JSON.stringify(history)
+      );
+    } catch (_) {}
+
+    const firstUserMessage =
+      history.find(m => m.role === "user")?.text ||
+      "New Skill Cartel conversation";
+
+    const payload = {
+      user_id: currentUser.id,
+      title: firstUserMessage.replace(/\s+/g, " ").slice(0, 90),
+      messages: history,
+      updated_at: new Date().toISOString()
+    };
+
+    let result;
+
+    if (conversationId) {
+      result = await supabaseClient
+        .from("conversations")
+        .update(payload)
+        .eq("id", conversationId)
+        .select("id")
+        .single();
+
+    } else {
+      result = await supabaseClient
+        .from("conversations")
+        .insert(payload)
+        .select("id")
+        .single();
+    }
+
+    if (result.error) {
+      console.error("Conversation save error:", result.error);
+
+      fileStatus.textContent =
+        "Your chat is working, but cloud saving failed. Please check the Supabase table and policies.";
+
+    } else if (!conversationId) {
+      conversationId = result.data.id;
+    }
+  }
+
+  async function enterApp(session) {
+    if (!session || !session.user) {
+      throw new Error("A valid login session was not returned.");
+    }
+
+    currentUser = session.user;
+
+    authScreen.classList.add("hidden");
+    publicSite.classList.add("hidden");
+    appWrap.classList.remove("hidden");
+
+    const isGuest = !!currentUser.is_anonymous;
+
+    document.getElementById("accountLabel").textContent =
+      isGuest ? "Guest session" : (currentUser.email || "Account");
+
+    accountAction.textContent = "Sign out";
+
+    await loadSavedConversation();
+  }
+
+  // SIGN UP AND SIGN IN
+  authForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const email = document.getElementById("authEmail").value.trim();
+    const password = document.getElementById("authPassword").value;
+
+    authSubmit.disabled = true;
+    authSubmit.textContent = "Please wait…";
+
+    setAuthMessage("");
+
+    try {
+      if (authMode === "signup") {
+        const { data, error } = await supabaseClient.auth.signUp({
+          email,
+          password
+        });
+
+        if (error) throw error;
+
+        if (data.session) {
+          await enterApp(data.session);
+        } else {
+          setAuthMode("login");
+
+          setAuthMessage(
+            "Account created. Check your email for the confirmation link, then return here and sign in."
+          );
+        }
+
+      } else {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+          email,
+          password
+        });
+
+        if (error) throw error;
+
+        await enterApp(data.session);
+      }
+
+    } catch (error) {
+      setAuthMessage(
+        error.message || "Authentication failed. Please try again.",
+        true
+      );
+
+    } finally {
+      authSubmit.disabled = false;
+      authSubmit.textContent =
+        authMode === "signup" ? "Create account" : "Sign in";
+    }
+  });
+
+  // GUEST SIGN IN
+  document.getElementById("guestBtn").addEventListener("click", async () => {
+    const guestBtn = document.getElementById("guestBtn");
+
+    guestBtn.disabled = true;
+    guestBtn.textContent = "Starting guest session…";
+
+    setAuthMessage("");
+
+    try {
+      const { data, error } =
+        await supabaseClient.auth.signInAnonymously();
+
+      if (error) throw error;
+
+      await enterApp(data.session);
+
+    } catch (error) {
+      setAuthMessage(
+        error.message ||
+        "Guest access could not start. Check that anonymous sign-ins are enabled in Supabase.",
+        true
+      );
+
+    } finally {
+      guestBtn.disabled = false;
+      guestBtn.textContent = "Continue as Guest";
+    }
+  });
+
+  // SIGN OUT
+  accountAction.addEventListener("click", async () => {
+    if (!confirm("Sign out of Skill Cartel on this device?")) return;
+
+    await supabaseClient.auth.signOut();
+
+    currentUser = null;
+    conversationId = null;
+    history = [];
+
+    appWrap.classList.add("hidden");
+    publicSite.classList.remove("hidden");
+    authScreen.classList.add("hidden");
+
+    setAuthMessage("You have signed out.");
+  });
+
+  function render(role, text) {
+    const div = document.createElement("div");
+
+    div.className = "msg " + (role === "user" ? "user" : "bot");
+    div.textContent = text;
+
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  async function save() {
+    await saveConversation();
+  }
+
+  function setBusy(value) {
+    typing.classList.toggle("hidden", !value);
+    send.disabled = value;
+    attachBtn.disabled = value;
+    send.textContent = value ? "…" : "Send";
+  }
+
+  // FILE ATTACHMENTS
+  attachBtn.addEventListener("click", () => fileInput.click());
+
+  fileInput.addEventListener("change", () => {
+    const file = fileInput.files && fileInput.files[0];
+
+    if (!file) return;
+
+    const allowed = /\.(txt|md|csv|json)$/i.test(file.name);
+
+    if (!allowed) {
+      alert("For now, attach TXT, MD, CSV, or JSON files. PDF and Word files are not supported in this version.");
+
+      fileInput.value = "";
+      selectedFile = null;
+      fileStatus.textContent = "";
+
+      return;
+    }
+
+    if (file.size > 1024 * 1024) {
+      alert("Please choose a file smaller than 1 MB.");
+
+      fileInput.value = "";
+      selectedFile = null;
+      fileStatus.textContent = "";
+
+      return;
+    }
+
+    selectedFile = file;
+
+    fileStatus.textContent =
+      "Ready to attach: " + file.name + " (maximum 1 MB)";
+  });
+
+  // SEND MESSAGE TO CLOUDFLARE
+  async function sendMessage(text) {
+    const clean = text.trim();
+
+    if ((!clean && !selectedFile) || send.disabled) return;
+
+    if (!supabaseClient) {
+      render("model", "Authentication service is not ready. Please refresh and sign in again.");
+      return;
+    }
+
+    let attachmentText = "";
+    let attachmentName = "";
+
+    if (selectedFile) {
+      try {
+        attachmentText = await selectedFile.text();
+        attachmentName = selectedFile.name;
+
+      } catch (_) {
+        render(
+          "model",
+          "I couldn't read that file. Please try a plain-text TXT, MD, CSV, or JSON file."
+        );
+        return;
+      }
+
+      if (!attachmentText.trim()) {
+        render("model", "That file appears to be empty.");
+        return;
+      }
+
+      attachmentText = attachmentText.slice(0, 10000);
+    }
+
+    const visibleText =
+      clean +
+      (attachmentName
+        ? (clean ? "\n\n" : "") + "Attached: " + attachmentName
+        : "");
+
+    const messageContent =
+      clean +
+      (attachmentName
+        ? "\n\n[Attached file: " + attachmentName + "]\n" + attachmentText
+        : "");
+
+    render("user", visibleText || "Attached: " + attachmentName);
+
+    history.push({
+      role: "user",
+      text: messageContent
+    });
+
+    history = history.slice(-20);
+
+    await save();
+
+    input.value = "";
+    selectedFile = null;
+    fileInput.value = "";
+    fileStatus.textContent = "";
+
+    setBusy(true);
+
+    try {
+      // IMPORTANT FIX:
+      // Retrieve the active Supabase session before calling Cloudflare.
+      const { data: sessionData, error: sessionError } =
+        await supabaseClient.auth.getSession();
+
+      if (sessionError) {
+        throw new Error(
+          "Could not verify your login: " + sessionError.message
+        );
+      }
+
+      const session = sessionData.session;
+
+      if (!session || !session.access_token) {
+        throw new Error(
+          "Your login session has expired. Please sign in again."
+        );
+      }
+
+      // Send the Supabase access token to Cloudflare.
+      const response = await fetch(API_URL, {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + session.access_token
+        },
+
+        body: JSON.stringify({
+          messages: history.map(m => ({
+            role: m.role === "user" ? "user" : "assistant",
+            content: m.text
+          }))
+        })
+      });
+
+      let data;
+
+      try {
+        data = await response.json();
+      } catch (_) {
+        throw new Error(
+          "Cloudflare returned an invalid response. Check your Worker deployment."
+        );
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          data.error || "Request failed. Please try again."
+        );
+      }
+
+      const answer = (data.reply || "").trim();
+
+      if (!answer) {
+        throw new Error("The AI returned an empty response.");
+      }
+
+      render("model", answer);
+
+      history.push({
+        role: "model",
+        text: answer
+      });
+
+      history = history.slice(-20);
+
+      await save();
+
+    } catch (err) {
+      console.error("Skill Cartel request error:", err);
+
+      render(
+        "model",
+        "I couldn't complete that request: " +
+        err.message +
+        "\n\nPlease try again. If this keeps happening, start a new chat."
+      );
+
+    } finally {
+      setBusy(false);
+      input.focus();
+    }
+  }
+
+  // CHAT FORM
+  form.addEventListener("submit", event => {
+    event.preventDefault();
+    sendMessage(input.value);
+  });
+
+  // QUICK COMMAND BUTTONS
+  document.querySelectorAll(".chip").forEach(button => {
+    button.addEventListener("click", () => {
+      sendMessage(button.dataset.text);
+    });
+  });
+
+  // NEW CHAT
+  document.getElementById("clearBtn").addEventListener("click", () => {
+    if (!confirm("Start a new conversation? This clears the chat saved in this browser.")) {
+      return;
+    }
+
+    history = [];
+
+    if (currentUser) {
+      localStorage.removeItem(
+        STORAGE_KEY + "-" + currentUser.id
+      );
+    }
+
+    conversationId = null;
+    messagesEl.innerHTML = "";
+
+    render(
+      "model",
+      "New Skill Cartel session started. What skill or experience would you like to explore?"
+    );
+  });
+
+  // EXPORT CONVERSATION
+  document.getElementById("exportBtn").addEventListener("click", () => {
+    const transcript = history.map(m =>
+      (m.role === "user" ? "YOU" : "SKILL CARTEL") +
+      "\n" +
+      m.text
+    ).join("\n\n");
+
+    if (!transcript) {
+      alert("There is no conversation to export yet.");
+      return;
+    }
+
+    const blob = new Blob(
+      [transcript],
+      { type: "text/plain;charset=utf-8" }
+    );
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+
+    a.href = url;
+    a.download = "skill-cartel-conversation.txt";
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+  });
+
+  // INITIALIZE SUPABASE
+  async function initializeSkillCartel() {
+    try {
+      if (
+        !window.supabase ||
+        !SUPABASE_URL.startsWith("https://") ||
+        SUPABASE_PUBLISHABLE_KEY.startsWith("PASTE_")
+      ) {
+        setAuthMessage(
+          "Setup required: check your Supabase Project URL and Publishable Key.",
+          true
+        );
+
+        return;
+      }
+
+      supabaseClient = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY,
+        {
+          auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true
+          }
+        }
+      );
+
+      const { data, error } =
+        await supabaseClient.auth.getSession();
+
+      if (error) {
+        throw error;
+      }
+
+      if (data.session) {
+        await enterApp(data.session);
+      }
+
+    } catch (error) {
+      console.error("Initialization error:", error);
+
+      setAuthMessage(
+        "Could not initialize Skill Cartel: " + error.message,
+        true
+      );
+    }
+  }
+
+
+
+  // PUBLIC WEBSITE NAVIGATION
+  function openAuth() {
+    publicSite.classList.add("hidden");
+    authScreen.classList.remove("hidden");
+    setAuthMode("signup");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  document.querySelectorAll("[data-open-auth]").forEach(button => {
+    button.addEventListener("click", openAuth);
+  });
+  document.getElementById("backToWebsite").addEventListener("click", () => {
+    authScreen.classList.add("hidden");
+    publicSite.classList.remove("hidden");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+  document.getElementById("mobileMenuButton").addEventListener("click", () => {
+    document.getElementById("mainNav").classList.toggle("nav-open");
+  });
+  document.querySelectorAll("#mainNav a").forEach(link => {
+    link.addEventListener("click", () => document.getElementById("mainNav").classList.remove("nav-open"));
+  });
+  const contactForm = document.getElementById("contactForm");
+  contactForm.addEventListener("submit", event => {
+    event.preventDefault();
+    if (!contactForm.reportValidity()) return;
+    const values = new FormData(contactForm);
+    const subject = encodeURIComponent("Skill Cartel enquiry: " + values.get("inquiryType"));
+    const body = encodeURIComponent(
+      "Name: " + values.get("fullName") + "\n" +
+      "Email: " + values.get("email") + "\n" +
+      "Country: " + values.get("country") + "\n" +
+      "Subject: " + values.get("subject") + "\n" +
+      "Inquiry type: " + values.get("inquiryType") + "\n\n" +
+      values.get("message")
+    );
+    document.getElementById("contactFeedback").textContent = "Your email application will open with the enquiry prepared. Please send it to complete submission.";
+    window.location.href = "mailto:SkillCartelAi@proton.me?subject=" + subject + "&body=" + body;
+  });
+
+  initializeSkillCartel();
+
+</script>
+</body>
+</html>
