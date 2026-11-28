@@ -3613,7 +3613,7 @@ To begin: what skill, activity, or type of problem-solving do people already com
       if (error) throw error;
       if (!data.session) throw new Error("No guest session was returned. Please try again.");
       message("Guest session ready. Opening Skill Cartel…", false);
-      returnToApp();
+      await returnToApp(data.session);
     } catch (error) {
       message(error && error.message ? error.message : "Guest access failed. Please try again.", true);
     } finally {
