@@ -1771,6 +1771,25 @@ h2 { margin:0; font-size:clamp(32px,4vw,52px); line-height:1.1; letter-spacing:-
     }
 
   </style>
+<style>
+/* SECTION 2 — CLEAN AI RESPONSE FORMATTING */
+#messages .bot { white-space:normal; line-height:1.7; }
+#messages .bot h1,#messages .bot h2,#messages .bot h3 { color:#f0d79b; line-height:1.3; margin:15px 0 8px; letter-spacing:0; }
+#messages .bot h1 { font-size:19px; } #messages .bot h2 { font-size:17px; } #messages .bot h3 { font-size:15px; }
+#messages .bot p { margin:7px 0 11px; }
+#messages .bot ul,#messages .bot ol { margin:8px 0 13px; padding-left:23px; }
+#messages .bot li { margin:4px 0; }
+#messages .bot strong { color:#f4d99c; }
+#messages .bot code { padding:2px 5px; border-radius:4px; background:#10100e; color:#e8ce91; font-size:.92em; }
+#messages .bot .chat-table-wrap { width:100%; overflow-x:auto; margin:12px 0 15px; border:1px solid #51452e; border-radius:9px; }
+#messages .bot table { width:100%; border-collapse:collapse; min-width:360px; font-size:12px; }
+#messages .bot th { background:#302719; color:#f0d79b; text-align:left; font-weight:700; }
+#messages .bot th,#messages .bot td { padding:9px 11px; border-bottom:1px solid #393329; vertical-align:top; }
+#messages .bot tbody tr:nth-child(even) { background:rgba(255,255,255,.025); }
+#messages .bot tbody tr:last-child td { border-bottom:0; }
+#messages .bot blockquote { margin:10px 0; padding:8px 12px; border-left:3px solid #d8b56a; color:#d5cbb8; background:#171510; }
+#messages .bot hr { border:0; border-top:1px solid #51452e; margin:13px 0; }
+</style>
 </head>
 
 <body>
@@ -2233,6 +2252,7 @@ To begin: what skill, activity, or type of problem-solving do people already com
   let conversationId = null;
   let savedConversations = [];
   let authMode = "signup";
+  let skillDiscoveryActive = false;
 
   const authScreen = document.getElementById("authScreen");
   const publicSite = document.getElementById("publicSite");
@@ -2676,14 +2696,43 @@ To begin: what skill, activity, or type of problem-solving do people already com
     setAuthMessage("You have signed out.");
   });
 
+  function escapeChatHtml(value) {
+    return String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
+
+  function formatChatInline(value) {
+    return escapeChatHtml(value).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/\*(.+?)\*/g, "<em>$1</em>").replace(/\x60([^\x60]+)\x60/g, "<code>$1</code>");
+  }
+
+  function formatChatMessage(markdown) {
+    const lines = String(markdown || "").replace(/\r/g, "").split("\n");
+    const output = []; let paragraph = []; let listType = "";
+    const flushParagraph = () => { if (paragraph.length) { output.push("<p>" + formatChatInline(paragraph.join(" ")) + "</p>"); paragraph = []; } };
+    const closeList = () => { if (listType) { output.push("</" + listType + ">"); listType = ""; } };
+    const cells = line => line.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map(cell => cell.trim());
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (!line) { flushParagraph(); closeList(); continue; }
+      if (line.includes("|") && i + 1 < lines.length && /^\s*\|?\s*:?-{3,}/.test(lines[i + 1])) {
+        flushParagraph(); closeList(); const headers = cells(line); i++; const rows = [];
+        while (i + 1 < lines.length && lines[i + 1].trim().includes("|") && !/^\s*\|?\s*:?-{3,}/.test(lines[i + 1])) { i++; rows.push(cells(lines[i])); }
+        output.push('<div class="chat-table-wrap"><table><thead><tr>' + headers.map(cell => "<th>" + formatChatInline(cell) + "</th>").join("") + "</tr></thead><tbody>" + rows.map(row => "<tr>" + headers.map((_, index) => "<td>" + formatChatInline(row[index] || "") + "</td>").join("") + "</tr>").join("") + "</tbody></table></div>'); continue;
+      }
+      const heading = line.match(/^#{1,3}\s+(.+)$/);
+      if (heading) { flushParagraph(); closeList(); const level = Math.min(line.match(/^#+/)[0].length, 3); output.push("<h" + level + ">" + formatChatInline(heading[1]) + "</h" + level + ">"); continue; }
+      if (/^(---+|\*\s*\*\s\*)$/.test(line)) { flushParagraph(); closeList(); output.push("<hr>"); continue; }
+      const bullet = line.match(/^[-*+]\s+(.+)$/); const numbered = line.match(/^\d+[.)]\s+(.+)$/);
+      if (bullet || numbered) { flushParagraph(); const type = bullet ? "ul" : "ol"; if (listType !== type) { closeList(); output.push("<" + type + ">"); listType = type; } output.push("<li>" + formatChatInline((bullet || numbered)[1]) + "</li>"); continue; }
+      if (line.startsWith(">")) { flushParagraph(); closeList(); output.push("<blockquote>" + formatChatInline(line.replace(/^>\s?/, "")) + "</blockquote>"); continue; }
+      closeList(); paragraph.push(line.replace(/^#{1,6}\s*/, ""));
+    }
+    flushParagraph(); closeList(); return output.join("");
+  }
+
   function render(role, text) {
-    const div = document.createElement("div");
-
-    div.className = "msg " + (role === "user" ? "user" : "bot");
-    div.textContent = text;
-
-    messagesEl.appendChild(div);
-    messagesEl.scrollTop = messagesEl.scrollHeight;
+    const div = document.createElement("div"); div.className = "msg " + (role === "user" ? "user" : "bot");
+    if (role === "user") div.textContent = text; else div.innerHTML = formatChatMessage(text);
+    messagesEl.appendChild(div); messagesEl.scrollTop = messagesEl.scrollHeight;
   }
 
   async function save() {
@@ -2809,12 +2858,19 @@ To begin: what skill, activity, or type of problem-solving do people already com
       budget -= content.length;
     }
 
+    const latestUser = [...compacted].reverse().find(item => item.role === "user");
+    if (latestUser) {
+      const formattingRules = "\n\n[Skill Cartel presentation rules: Write clean, beginner-friendly answers with concise headings, short paragraphs and useful lists. Use a real Markdown table whenever structured comparison is useful; the website will render it as a visual table. Use a few relevant emojis only where helpful. Avoid excessive commas, decorative symbol strings and raw Markdown markers in visible explanations.]";
+      const discoveryRules = skillDiscoveryActive ? "\n\n[ACTIVE SKILL DISCOVERY SPECIALIST WORKFLOW: You are Skill Cartel's patient Skill Discovery and Opportunity Analyst. The user is a beginner. Ask exactly ONE clear question per response and wait for the answer; never send a questionnaire or multiple questions. Do not ask for their name. Gradually discover practical abilities (including informal, school, home, work and digital skills), experience, interests, tasks others ask them to help with, available time, tools/resources, preferred working style and constraints, one question at a time. If they have no obvious skills, help recognise transferable abilities with examples. Do not assume expertise or promise income. After enough evidence, summarise strengths, identify customer problems they could credibly help solve, and suggest 3–5 suitable business opportunities. Compare them in a readable table using fit, likely customer, first simple offer, startup difficulty and validation step. Label demand and earning potential as hypotheses to test, not guarantees. Recommend one realistic starting option and give a small first action. Stay supportive, practical and beginner-friendly. Start by asking what activities, tasks or problems they enjoy or are naturally good at if that is not already known.]": "";
+      latestUser.content += formattingRules + discoveryRules;
+    }
     return compacted;
   }
 
   // SEND MESSAGE TO CLOUDFLARE
   async function sendMessage(text) {
     const clean = text.trim();
+    if (/^(start|start skill discovery)$/i.test(clean) || /discover my skills|skill discovery|find my skills|business ideas based on my skills/i.test(clean)) skillDiscoveryActive = true;
     const retryingPending = !!(
       pendingRequest &&
       clean === pendingRequest.clean &&
@@ -3006,6 +3062,7 @@ To begin: what skill, activity, or type of problem-solving do people already com
 
     history = [];
     pendingRequest = null;
+    skillDiscoveryActive = false;
 
     if (currentUser) {
       localStorage.removeItem(
