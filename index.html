@@ -2265,7 +2265,7 @@ To begin: what skill, activity, or type of problem-solving do people already com
   // Bind AI access navigation immediately, before the rest of app initialization.
   // This keeps the access screen reachable even if a later feature has an initialization error.
   document.addEventListener("click", event => {
-    const trigger = event.target.closest("[data-open-auth onclick="document.getElementById('publicSite').classList.add('hidden');document.getElementById('authScreen').classList.remove('hidden');window.scrollTo(0,0)"]");
+    const trigger = event.target.closest("[data-open-auth]");
     if (!trigger) return;
     event.preventDefault();
     openAuth();
