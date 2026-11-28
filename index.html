@@ -3471,5 +3471,130 @@ To begin: what skill, activity, or type of problem-solving do people already com
   initializeSkillCartel();
 
 </script>
+
+<script>
+/* Independent authentication controller: keeps auth usable if the main app has an initialization problem. */
+(function () {
+  const authScreen = document.getElementById("authScreen");
+  const authForm = document.getElementById("authForm");
+  const authSubmit = document.getElementById("authSubmit");
+  const authMessage = document.getElementById("authMessage");
+  const guestBtn = document.getElementById("guestBtn");
+  const emailInput = document.getElementById("authEmail");
+  const passwordInput = document.getElementById("authPassword");
+  const signupTab = document.getElementById("showSignup");
+  const loginTab = document.getElementById("showLogin");
+  if (!authScreen || !authForm || !authSubmit || !authMessage || !guestBtn) return;
+
+  let mode = "signup";
+  let client = null;
+
+  function message(text, error) {
+    authMessage.textContent = text;
+    authMessage.style.color = error ? "#ffb4a9" : "#f0d79b";
+  }
+
+  function setMode(nextMode) {
+    mode = nextMode;
+    signupTab.classList.toggle("active", mode === "signup");
+    loginTab.classList.toggle("active", mode === "login");
+    authSubmit.textContent = mode === "signup" ? "Create account" : "Sign in";
+    passwordInput.autocomplete = mode === "signup" ? "new-password" : "current-password";
+    message("", false);
+  }
+
+  function getClient() {
+    if (client) return client;
+    if (!window.supabase || typeof window.supabase.createClient !== "function") {
+      throw new Error("The secure sign-in service did not load. Please refresh and try again.");
+    }
+    client = window.supabase.createClient(
+      "https://gssguxwskyvmoppnuowk.supabase.co",
+      "sb_publishable_4_IlB-g6jPafJKCb9c4lug_kBefbYwN",
+      { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } }
+    );
+    return client;
+  }
+
+  function returnToApp() {
+    window.location.reload();
+  }
+
+  document.addEventListener("click", function (event) {
+    const target = event.target;
+    if (target === signupTab || signupTab.contains(target)) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      setMode("signup");
+    } else if (target === loginTab || loginTab.contains(target)) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      setMode("login");
+    }
+  }, true);
+
+  authForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    if (!email || !password) {
+      message("Enter your email address and password to continue.", true);
+      return;
+    }
+    authSubmit.disabled = true;
+    authSubmit.textContent = "Please wait…";
+    message("Connecting securely…", false);
+    try {
+      const supabase = getClient();
+      if (mode === "signup") {
+        const { data, error } = await supabase.auth.signUp({ email, password });
+        if (error) throw error;
+        if (data.session) {
+          message("Account created. Opening Skill Cartel…", false);
+          returnToApp();
+        } else {
+          setMode("login");
+          message("Account created. Check your email for the confirmation link, then sign in here.", false);
+        }
+      } else {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        if (!data.session) throw new Error("Sign-in completed but no session was returned. Please try again.");
+        message("Signed in. Opening Skill Cartel…", false);
+        returnToApp();
+      }
+    } catch (error) {
+      message(error && error.message ? error.message : "Authentication failed. Please try again.", true);
+    } finally {
+      authSubmit.disabled = false;
+      authSubmit.textContent = mode === "signup" ? "Create account" : "Sign in";
+    }
+  }, true);
+
+  guestBtn.addEventListener("click", async function (event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    guestBtn.disabled = true;
+    guestBtn.textContent = "Starting guest session…";
+    message("Starting a secure guest session…", false);
+    try {
+      const { data, error } = await getClient().auth.signInAnonymously();
+      if (error) throw error;
+      if (!data.session) throw new Error("No guest session was returned. Please try again.");
+      message("Guest session ready. Opening Skill Cartel…", false);
+      returnToApp();
+    } catch (error) {
+      message(error && error.message ? error.message : "Guest access failed. Please try again.", true);
+    } finally {
+      guestBtn.disabled = false;
+      guestBtn.textContent = "Continue as Guest";
+    }
+  }, true);
+
+  setMode("signup");
+})();
+</script>
+
 </body>
 </html>
