@@ -2120,6 +2120,7 @@ h2 { margin:0; font-size:clamp(32px,4vw,52px); line-height:1.1; letter-spacing:-
         <div class="actions">
           <button class="ghost" id="exportBtn" title="Download this conversation">Export</button>
           <button class="ghost" id="exportPdfBtn" title="Print or save this conversation as a PDF">Export PDF</button>
+          <button class="ghost" id="createEbookPdfBtn" title="Create a professionally formatted ebook PDF">Create Ebook PDF</button>
           <button class="ghost" id="clearBtn" title="Clear this conversation">New chat</button>
         </div>
       </div>
@@ -2178,9 +2179,31 @@ To begin: what skill, activity, or type of problem-solving do people already com
   </p>
 
 </div>
+<!-- PROFESSIONAL EBOOK PDF BUILDER -->
+<dialog id="ebookPdfDialog" style="width:min(920px,94vw);max-height:90vh;border:1px solid #b58a3f;border-radius:16px;padding:0;background:#111;color:#f5f1e8;box-shadow:0 24px 80px #0009">
+  <form method="dialog" style="display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid #51452f">
+    <div><strong style="font-size:18px">Ebook PDF Builder</strong><div style="font-size:12px;color:#c6bda9;margin-top:4px">Create a polished, downloadable ebook from your manuscript.</div></div>
+    <button class="ghost" value="cancel" aria-label="Close ebook builder">✕</button>
+  </form>
+  <div style="padding:20px 22px;display:grid;gap:12px;overflow:auto">
+    <label style="display:grid;gap:6px;font-size:12px;color:#d7c9a8">EBOOK TITLE<input id="ebookTitle" maxlength="120" placeholder="Your ebook title" style="padding:12px;border-radius:8px;border:1px solid #655638;background:#191919;color:white"></label>
+    <label style="display:grid;gap:6px;font-size:12px;color:#d7c9a8">SUBTITLE<input id="ebookSubtitle" maxlength="180" placeholder="A clear promise or short description" style="padding:12px;border-radius:8px;border:1px solid #655638;background:#191919;color:white"></label>
+    <label style="display:grid;gap:6px;font-size:12px;color:#d7c9a8">AUTHOR<input id="ebookAuthor" maxlength="100" placeholder="Author name or brand" style="padding:12px;border-radius:8px;border:1px solid #655638;background:#191919;color:white"></label>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><strong style="font-size:12px;color:#d7c9a8">MANUSCRIPT</strong><button type="button" class="ghost" id="loadEbookDraftBtn">Load long AI responses from this chat</button></div>
+    <textarea id="ebookManuscript" rows="14" placeholder="# Chapter 1: Your chapter title&#10;&#10;Paste your complete, edited ebook manuscript here. Use # for chapter headings and ## for section headings." style="width:100%;box-sizing:border-box;resize:vertical;padding:13px;border-radius:8px;border:1px solid #655638;background:#191919;color:white;font:13px/1.6 Arial,sans-serif"></textarea>
+    <div style="font-size:11px;color:#b9b1a2">Tip: Use # for chapter titles and ## for section headings. Review the manuscript before creating the PDF. Your text is processed in your browser and is not sent to an ebook conversion service.</div>
+    <div id="ebookPdfStatus" role="status" style="font-size:12px;color:#e5c77d"></div>
+    <div style="display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap">
+      <button type="button" class="ghost" id="cancelEbookPdfBtn">Cancel</button>
+      <button type="button" id="generateEbookPdfBtn" class="primary">Generate & Download PDF</button>
+    </div>
+  </div>
+</dialog>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://unpkg.com/mammoth@1.9.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
   // SUPABASE CONFIGURATION
@@ -3073,7 +3096,97 @@ To begin: what skill, activity, or type of problem-solving do people already com
     printWindow.document.close();
   });
 
-  // INITIALIZE SUPABASE
+
+
+  // PROFESSIONAL EBOOK PDF BUILDER
+  (function setupEbookPdfBuilder() {
+    const dialog = document.getElementById("ebookPdfDialog");
+    const titleInput = document.getElementById("ebookTitle");
+    const subtitleInput = document.getElementById("ebookSubtitle");
+    const authorInput = document.getElementById("ebookAuthor");
+    const manuscriptInput = document.getElementById("ebookManuscript");
+    const status = document.getElementById("ebookPdfStatus");
+    const generateBtn = document.getElementById("generateEbookPdfBtn");
+    const escapeHtml = value => String(value).replace(/[&<>"']/g, ch => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", "\"":"&quot;", "'":"&#39;" }[ch]));
+
+    document.getElementById("createEbookPdfBtn").addEventListener("click", () => {
+      status.textContent = "";
+      if (!titleInput.value.trim()) titleInput.value = "My Digital Ebook";
+      if (!authorInput.value.trim()) authorInput.value = "Skill Cartel Creator";
+      dialog.showModal();
+    });
+    document.getElementById("cancelEbookPdfBtn").addEventListener("click", () => dialog.close());
+    document.getElementById("loadEbookDraftBtn").addEventListener("click", () => {
+      const longReplies = history.filter(m => m.role !== "user" && typeof m.text === "string" && m.text.trim().length > 350).map(m => m.text.trim());
+      if (!longReplies.length) { status.textContent = "No long AI responses were found in this chat. Paste your manuscript into the box."; return; }
+      manuscriptInput.value = longReplies.join("\n\n---\n\n");
+      status.textContent = "Loaded " + longReplies.length + " longer AI response(s). Please remove chat discussion and keep only your final ebook content before generating.";
+    });
+
+    function markdownToHtml(markdown) {
+      const lines = String(markdown).replace(/\r/g, "").split("\n");
+      const out = []; let paragraph = []; let listType = null;
+      const inline = s => escapeHtml(s)
+        .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+        .replace(/\*(.+?)\*/g, "<em>$1</em>")
+        .replace(/`([^`]+)`/g, "<code>$1</code>");
+      const flushP = () => { if (paragraph.length) { out.push("<p>" + inline(paragraph.join(" ")) + "</p>"); paragraph = []; } };
+      const closeList = () => { if (listType) { out.push("</" + listType + ">"); listType = null; } };
+      for (const raw of lines) {
+        const line = raw.trim();
+        if (!line) { flushP(); closeList(); continue; }
+        const heading = line.match(/^(#{1,3})\s+(.+)$/);
+        if (heading) { flushP(); closeList(); const level = heading[1].length; const text = heading[2]; const id = "section-" + out.length; out.push("<h" + level + ' id="' + id + '">' + inline(text) + "</h" + level + ">"); continue; }
+        if (/^---+$/.test(line)) { flushP(); closeList(); out.push("<hr>"); continue; }
+        const bullet = line.match(/^[-*]\s+(.+)$/);
+        const numbered = line.match(/^\d+[.)]\s+(.+)$/);
+        if (bullet || numbered) { flushP(); const nextType = bullet ? "ul" : "ol"; if (listType !== nextType) { closeList(); out.push("<" + nextType + ">"); listType = nextType; } out.push("<li>" + inline((bullet || numbered)[1]) + "</li>"); continue; }
+        if (line.startsWith(">")) { flushP(); closeList(); out.push("<blockquote>" + inline(line.replace(/^>\s?/, "")) + "</blockquote>"); continue; }
+        closeList(); paragraph.push(line);
+      }
+      flushP(); closeList();
+      return out.join("\n");
+    }
+
+    generateBtn.addEventListener("click", async () => {
+      const manuscript = manuscriptInput.value.trim();
+      if (!manuscript) { status.textContent = "Please paste or load your ebook manuscript first."; manuscriptInput.focus(); return; }
+      if (!window.html2pdf) { status.textContent = "The PDF engine did not load. Refresh the page and try again."; return; }
+      generateBtn.disabled = true; generateBtn.textContent = "Creating PDF…"; status.textContent = "Formatting your ebook. Please wait…";
+      try {
+        const title = titleInput.value.trim() || "My Digital Ebook";
+        const subtitle = subtitleInput.value.trim();
+        const author = authorInput.value.trim() || "Skill Cartel Creator";
+        const bodyHtml = markdownToHtml(manuscript);
+        const headings = [...bodyHtml.matchAll(/<h[1-3] id="([^"]+)">([\s\S]*?)<\/h[1-3]>/g)];
+        const toc = headings.length ? headings.map((h, i) => '<li><span>' + h[2] + '</span></li>').join("") : '<li>Manuscript contents</li>';
+        const wrapper = document.createElement("div");
+        wrapper.innerHTML = '<style>' +
+          '.ebook-export{width:794px;background:#fff;color:#252525;font:12px/1.75 Georgia,serif;padding:0;}' +
+          '.ebook-cover{height:1030px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:80px;background:#171717;color:#f8f4eb;border-bottom:12px solid #b58a3f;page-break-after:always;}' +
+          '.ebook-brand{font:700 16px Arial,sans-serif;letter-spacing:5px;color:#d5ad62;margin-bottom:90px}.ebook-cover h1{font:700 42px/1.18 Arial,sans-serif;color:#fff;max-width:620px;margin:0 0 22px}.ebook-cover p{font:18px/1.5 Arial,sans-serif;color:#ddd}.ebook-cover .byline{margin-top:90px;font-size:14px;color:#d5ad62}' +
+          '.ebook-toc{min-height:980px;padding:70px 76px;page-break-after:always}.ebook-toc h1{font:700 30px Arial,sans-serif;color:#9a742f;border-bottom:2px solid #b58a3f;padding-bottom:16px}.ebook-toc ol{padding-left:24px}.ebook-toc li{padding:9px 0;border-bottom:1px solid #eee;font-size:14px}' +
+          '.ebook-content{padding:55px 76px}.ebook-content h1{font:700 27px/1.25 Arial,sans-serif;color:#9a742f;margin:34px 0 18px;page-break-after:avoid}.ebook-content h2{font:700 19px Arial,sans-serif;color:#333;margin:27px 0 12px;page-break-after:avoid}.ebook-content h3{font:700 15px Arial,sans-serif;color:#8b682e;margin:22px 0 8px;page-break-after:avoid}.ebook-content p{margin:0 0 14px}.ebook-content ul,.ebook-content ol{padding-left:25px;margin:8px 0 18px}.ebook-content li{padding:3px 0}.ebook-content blockquote{border-left:4px solid #b58a3f;padding:8px 16px;margin:18px 0;background:#f8f5ef;color:#555}.ebook-content hr{border:0;border-top:1px solid #ddd;margin:24px 0}.ebook-content code{font-family:monospace;background:#f3f0ea;padding:2px 4px;border-radius:3px}' +
+          '</style><div class="ebook-export"><section class="ebook-cover"><div class="ebook-brand">SKILL CARTEL</div><h1>' + escapeHtml(title) + '</h1><p>' + escapeHtml(subtitle) + '</p><div class="byline">Written by ' + escapeHtml(author) + '</div></section><section class="ebook-toc"><h1>Table of Contents</h1><ol>' + toc + '</ol></section><section class="ebook-content">' + bodyHtml + '<hr><h2>About this publication</h2><p>Created with Skill Cartel. Review all information for accuracy and suitability before publishing or selling this ebook.</p></section></div>';
+        document.body.appendChild(wrapper);
+        const safeName = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "skill-cartel-ebook";
+        const options = { margin: [0,0,0,0], filename: safeName + ".pdf", image: { type: "jpeg", quality: 0.96 }, html2canvas: { scale: 1.6, useCORS: true, backgroundColor: "#ffffff" }, jsPDF: { unit: "pt", format: "a4", orientation: "portrait" }, pagebreak: { mode: ["css", "legacy"] } };
+        await window.html2pdf().set(options).from(wrapper).toPdf().get("pdf").then(pdf => {
+          const total = pdf.internal.getNumberOfPages();
+          for (let page = 1; page <= total; page++) {
+            pdf.setPage(page);
+            if (page > 1) { pdf.setFontSize(8); pdf.setTextColor(130); pdf.text(String(page - 1), pdf.internal.pageSize.getWidth() - 42, pdf.internal.pageSize.getHeight() - 22); }
+          }
+        }).save();
+        wrapper.remove(); status.textContent = "Your ebook PDF has been generated and downloaded."; 
+      } catch (error) {
+        console.error("Ebook PDF generation failed:", error);
+        status.textContent = "PDF creation failed. Please shorten the manuscript and try again.";
+      } finally { generateBtn.disabled = false; generateBtn.textContent = "Generate & Download PDF"; }
+    });
+  })();
+
+    // INITIALIZE SUPABASE
   async function initializeSkillCartel() {
     try {
       if (
