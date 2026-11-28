@@ -2603,6 +2603,10 @@ To begin: what skill, activity, or type of problem-solving do people already com
     await loadConversationList();
   }
 
+  // Expose the existing app entry point so the independent auth controller
+  // can open the app directly without reloading back to the public homepage.
+  window.skillCartelEnterApp = enterApp;
+
   // SIGN UP AND SIGN IN
   authForm.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -3531,8 +3535,11 @@ To begin: what skill, activity, or type of problem-solving do people already com
     return client;
   }
 
-  function returnToApp() {
-    window.location.reload();
+  async function returnToApp(session) {
+    if (typeof window.skillCartelEnterApp !== "function") {
+      throw new Error("Skill Cartel could not open the app. Please refresh and try again.");
+    }
+    await window.skillCartelEnterApp(session);
   }
 
   document.addEventListener("click", function (event) {
@@ -3570,7 +3577,7 @@ To begin: what skill, activity, or type of problem-solving do people already com
         if (error) throw error;
         if (data.session) {
           message("Account created. Opening Skill Cartel…", false);
-          returnToApp();
+          await returnToApp(data.session);
         } else {
           setMode("login");
           message("Account created. Check your email for the confirmation link, then sign in here.", false);
@@ -3580,7 +3587,7 @@ To begin: what skill, activity, or type of problem-solving do people already com
         if (error) throw error;
         if (!data.session) throw new Error("Sign-in completed but no session was returned. Please try again.");
         message("Signed in. Opening Skill Cartel…", false);
-        returnToApp();
+        await returnToApp(data.session);
       }
     } catch (error) {
       message(error && error.message ? error.message : "Authentication failed. Please try again.", true);
