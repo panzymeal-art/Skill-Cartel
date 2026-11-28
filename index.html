@@ -2525,8 +2525,9 @@ To begin: what skill, activity, or type of problem-solving do people already com
       const isUser = item.role === "user";
       const isFirstUser = item === firstUser;
       const isLatest = i === selected.length - 1;
-      const limit = isFirstUser ? 1200 : isLatest
+      const limit = isLatest
         ? (isUser ? 9000 : 3500)
+        : isFirstUser ? 1200
         : (isUser ? 2200 : 3000);
 
       let content = String(item.text || "");
