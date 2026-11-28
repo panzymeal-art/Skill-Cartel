@@ -46,7 +46,10 @@ WORKING METHOD
 - For social content, move through: platform and objective → audience → content pillars → ideas and hooks → scripts and assets → publishing plan → measurement and iteration.
 - For customer communication, identify the channel, customer situation and desired next step before drafting when those details are necessary.
 - For image prompts, identify the intended asset, platform or use, dimensions/aspect ratio and brand direction when missing details materially affect the result.
-- When a user asks for a complete deliverable, produce the deliverable rather than stopping at an outline. If it is too large for one response, explain the stages and complete the first useful part.
+- When a user asks for a long deliverable such as an ebook, course, report or multi-chapter guide, divide it into manageable response-sized sections. Complete one logical chapter or section per response rather than trying to force an entire book into one reply.
+- At the end of each long-form response, state the exact heading where the next section should begin and invite the user to say "Continue".
+- When the user says "Continue", continue from the exact next heading using the available recent context. Do not repeat completed sections or ask the user to resend the whole original request.
+- If a provider is temporarily rate-limited, explain that the request can be retried after the stated wait. Do not tell the user to start a new chat unless the conversation is genuinely unrecoverable.
 
 COMMANDS
 START — begin onboarding. Ask what name or nickname the user prefers, then ask about their skills and experience one question at a time.
@@ -914,48 +917,81 @@ export default {
         "https://api.groq.com/openai/v1"
       ).replace(/\/+$/, "");
 
-      const response = await fetch(
-        base + "/chat/completions",
-        {
-          method: "POST",
-          headers: {
-            "Authorization": "Bearer " + env.AI_API_KEY,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            model: env.AI_MODEL || "openai/gpt-oss-120b",
-            messages: [
-              {
-                role: "system",
-                content: SYSTEM_PROMPT
-              },
-              ...messages
-            ],
-            temperature: 0.7,
-            max_tokens: 2000
-          })
+      // Long documents should be generated in logical sections, not one oversized reply.
+      const providerPayload = JSON.stringify({
+        model: env.AI_MODEL || "openai/gpt-oss-120b",
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          ...messages
+        ],
+        temperature: 0.7,
+        max_completion_tokens: 2500
+      });
+
+      const callProvider = () => fetch(base + "/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + env.AI_API_KEY,
+          "Content-Type": "application/json"
+        },
+        body: providerPayload
+      });
+
+      let response = await callProvider();
+
+      // Respect Retry-After and perform at most one bounded retry.
+      if (response.status === 429) {
+        const retryHeader = response.headers.get("retry-after");
+        let retryMs = Number(retryHeader) * 1000;
+
+        if (!Number.isFinite(retryMs) || retryMs <= 0) {
+          const retryDate = retryHeader ? Date.parse(retryHeader) : NaN;
+          retryMs = Number.isFinite(retryDate) ? retryDate - Date.now() : 2000;
         }
-      );
+
+        retryMs = Math.max(1000, retryMs);
+        const retrySeconds = Math.ceil(retryMs / 1000);
+
+        if (retryMs <= 5000) {
+          await new Promise(resolve => setTimeout(resolve, retryMs));
+          response = await callProvider();
+        } else {
+          return json({
+            error: "Skill Cartel is temporarily busy because the AI provider reached its usage limit. Your message is saved. Please wait about " + retrySeconds + " seconds, then press Send to retry.",
+            retry_after_seconds: retrySeconds
+          }, 429, origin);
+        }
+      }
 
       if (!response.ok) {
         const errorText = await response.text();
+        console.error("GROQ API ERROR:", response.status, errorText);
 
-        console.error(
-          "GROQ API ERROR:",
-          response.status,
-          errorText
-        );
+        if (response.status === 429) {
+          const retryHeader = response.headers.get("retry-after");
+          const parsed = Number(retryHeader);
+          const retrySeconds = Number.isFinite(parsed) && parsed >= 1 ? Math.ceil(parsed) : 5;
+          return json({
+            error: "Skill Cartel is temporarily busy. Your message is saved. Please wait " + retrySeconds + " seconds, then press Send to retry.",
+            retry_after_seconds: retrySeconds
+          }, 429, origin);
+        }
 
-        return json(
-          {
-            error:
-              response.status === 429
-                ? "AI service is rate-limited. Try again shortly."
-                : "AI service error. Check Worker logs and model settings."
-          },
-          502,
-          origin
-        );
+        if (response.status === 413) {
+          return json({
+            error: "This request was too large for the AI provider. Your conversation is still saved. Please ask for one chapter or smaller section at a time."
+          }, 413, origin);
+        }
+
+        if (response.status >= 500) {
+          return json({
+            error: "The AI provider is temporarily unavailable. Your message is saved; please try again shortly."
+          }, 503, origin);
+        }
+
+        return json({
+          error: "The AI provider rejected this request (" + response.status + "). Please shorten the request and try again."
+        }, 502, origin);
       }
 
       const data = await response.json();
