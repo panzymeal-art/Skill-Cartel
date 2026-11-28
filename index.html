@@ -1745,7 +1745,32 @@ h2 { margin:0; font-size:clamp(32px,4vw,52px); line-height:1.1; letter-spacing:-
   #publicSite .sc-banner-carousel.is-running .sc-banner-progress span { animation:none; }
 }
 
-</style>
+
+    /* CHAT HISTORY */
+    .history-panel { border-top:1px solid var(--line); margin-top:18px; padding-top:16px; }
+    .history-heading { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px; }
+    .history-heading h3 { margin:0; color:var(--gold); font-size:12px; letter-spacing:1.2px; }
+    .history-search { width:100%; margin:0 0 12px; padding:9px 10px; color:#fff; background:#191919; border:1px solid #393939; border-radius:9px; outline:none; }
+    .history-search:focus { border-color:var(--gold); }
+    .history-group-label { margin:12px 0 6px; color:#9e927b; font-size:10px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; }
+    .history-list { display:grid; gap:5px; }
+    .history-item { display:flex; align-items:center; gap:5px; padding:7px; border:1px solid transparent; border-radius:9px; background:#151515; }
+    .history-item.active { border-color:#75603b; background:#211c14; }
+    .history-open { flex:1; min-width:0; padding:2px 3px; border:0; background:transparent; color:#e8e4da; text-align:left; font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .history-action { flex:none; width:27px; height:27px; padding:0; border:1px solid #38332a; border-radius:7px; background:#1d1b17; color:#cfc5ae; font-size:12px; }
+    .history-action:hover { color:var(--gold2); border-color:var(--gold); }
+    .history-empty { color:#888; font-size:11px; padding:7px 2px; }
+    .history-status { color:#d7bd83; font-size:10px; min-height:14px; margin-top:8px; }
+    @media (max-width: 760px) {
+      .layout { grid-template-columns:1fr; }
+      .side { order:2; }
+      .chat { order:1; min-height:560px; }
+      .history-list { max-height:240px; overflow:auto; }
+      .chat-head { align-items:flex-start; flex-direction:column; }
+      .actions { width:100%; }
+    }
+
+  </style>
 </head>
 
 <body>
@@ -2067,6 +2092,16 @@ h2 { margin:0; font-size:clamp(32px,4vw,52px); line-height:1.1; letter-spacing:-
         <span><b>Improve</b><br>Review results in Sell Mode.</span>
       </div>
 
+      <section class="history-panel" aria-label="Conversation history">
+        <div class="history-heading"><h3>CHAT HISTORY</h3><span id="historyCount" style="color:#888;font-size:10px">0 chats</span></div>
+        <input id="historySearch" class="history-search" type="search" placeholder="Search conversations…" aria-label="Search conversations">
+        <div class="history-group-label">Pinned</div>
+        <div id="pinnedChats" class="history-list"><div class="history-empty">No pinned chats yet.</div></div>
+        <div class="history-group-label">Recent</div>
+        <div id="recentChats" class="history-list"><div class="history-empty">Your chats will appear here.</div></div>
+        <div id="historyStatus" class="history-status" role="status"></div>
+      </section>
+
       <div class="side-note">
         <b>Start with what you have.</b><br>
         Skill Cartel helps you plan and test an idea.
@@ -2173,6 +2208,7 @@ To begin: what skill, activity, or type of problem-solving do people already com
   let supabaseClient = null;
   let currentUser = null;
   let conversationId = null;
+  let savedConversations = [];
   let authMode = "signup";
 
   const authScreen = document.getElementById("authScreen");
@@ -2205,10 +2241,199 @@ To begin: what skill, activity, or type of problem-solving do people already com
   document.getElementById("showSignup").addEventListener("click", () => setAuthMode("signup"));
   document.getElementById("showLogin").addEventListener("click", () => setAuthMode("login"));
 
+  function setHistoryStatus(message) {
+    const el = document.getElementById("historyStatus");
+    if (el) el.textContent = message || "";
+  }
+
+  function renderConversationList() {
+    const pinnedEl = document.getElementById("pinnedChats");
+    const recentEl = document.getElementById("recentChats");
+    const searchEl = document.getElementById("historySearch");
+    const countEl = document.getElementById("historyCount");
+    if (!pinnedEl || !recentEl) return;
+
+    const query = (searchEl?.value || "").trim().toLowerCase();
+    const filtered = savedConversations.filter(item =>
+      String(item.title || "New conversation").toLowerCase().includes(query)
+    );
+    const pinned = filtered.filter(item => item.is_pinned);
+    const recent = filtered.filter(item => !item.is_pinned);
+
+    countEl.textContent = savedConversations.length + (savedConversations.length === 1 ? " chat" : " chats");
+
+    function fill(container, items, emptyText) {
+      container.replaceChildren();
+      if (!items.length) {
+        const empty = document.createElement("div");
+        empty.className = "history-empty";
+        empty.textContent = emptyText;
+        container.appendChild(empty);
+        return;
+      }
+
+      items.forEach(item => {
+        const row = document.createElement("div");
+        row.className = "history-item" + (item.id === conversationId ? " active" : "");
+
+        const open = document.createElement("button");
+        open.type = "button";
+        open.className = "history-open";
+        open.textContent = item.title || "New conversation";
+        open.title = item.title || "New conversation";
+        open.addEventListener("click", () => openSavedConversation(item.id));
+
+        const pin = document.createElement("button");
+        pin.type = "button";
+        pin.className = "history-action";
+        pin.textContent = item.is_pinned ? "★" : "☆";
+        pin.title = item.is_pinned ? "Unpin conversation" : "Pin conversation";
+        pin.setAttribute("aria-label", pin.title);
+        pin.addEventListener("click", () => toggleConversationPin(item));
+
+        const more = document.createElement("button");
+        more.type = "button";
+        more.className = "history-action";
+        more.textContent = "⋯";
+        more.title = "Rename or delete";
+        more.setAttribute("aria-label", "Rename or delete conversation");
+        more.addEventListener("click", () => manageConversation(item));
+
+        row.append(open, pin, more);
+        container.appendChild(row);
+      });
+    }
+
+    fill(pinnedEl, pinned, query ? "No matching pinned chats." : "No pinned chats yet.");
+    fill(recentEl, recent, query ? "No matching recent chats." : "Your chats will appear here.");
+  }
+
+  async function loadConversationList() {
+    if (!currentUser || !supabaseClient) return;
+    const { data, error } = await supabaseClient
+      .from("conversations")
+      .select("id,title,updated_at,is_pinned")
+      .eq("user_id", currentUser.id)
+      .order("updated_at", { ascending: false })
+      .limit(100);
+
+    if (error) {
+      console.error("Conversation history load error:", error);
+      setHistoryStatus(
+        error.message && /is_pinned|column/i.test(error.message)
+          ? "One database setup step is still needed to enable pinned chats."
+          : "Chat history could not be loaded. Check your Supabase permissions."
+      );
+      return;
+    }
+
+    savedConversations = Array.isArray(data) ? data : [];
+    renderConversationList();
+    setHistoryStatus("");
+  }
+
+  async function openSavedConversation(id) {
+    if (!currentUser) return;
+    setHistoryStatus("Opening conversation…");
+
+    const { data, error } = await supabaseClient
+      .from("conversations")
+      .select("id,messages")
+      .eq("id", id)
+      .eq("user_id", currentUser.id)
+      .maybeSingle();
+
+    if (error || !data || !Array.isArray(data.messages)) {
+      setHistoryStatus("That conversation could not be opened. Please try again.");
+      return;
+    }
+
+    conversationId = data.id;
+    history = data.messages
+      .filter(m => m && ["user", "model"].includes(m.role) && typeof m.text === "string")
+      .slice(-20);
+
+    messagesEl.innerHTML = "";
+    history.forEach(m => render(m.role === "user" ? "user" : "model", m.text));
+    pendingRequest = null;
+    renderConversationList();
+    setHistoryStatus("");
+  }
+
+  async function toggleConversationPin(item) {
+    const nextValue = !item.is_pinned;
+    const { error } = await supabaseClient
+      .from("conversations")
+      .update({ is_pinned: nextValue })
+      .eq("id", item.id)
+      .eq("user_id", currentUser.id);
+
+    if (error) {
+      console.error("Conversation pin error:", error);
+      setHistoryStatus("Pinning is not ready yet. Complete the database setup step first.");
+      return;
+    }
+
+    item.is_pinned = nextValue;
+    renderConversationList();
+    setHistoryStatus(nextValue ? "Conversation pinned." : "Conversation unpinned.");
+  }
+
+  async function manageConversation(item) {
+    const action = prompt("Type R to rename this chat, or D to delete it.", "R");
+    if (!action) return;
+
+    if (action.trim().toLowerCase() === "r") {
+      const title = prompt("Enter a new conversation title:", item.title || "");
+      if (!title || !title.trim()) return;
+      const { error } = await supabaseClient
+        .from("conversations")
+        .update({ title: title.trim().slice(0, 90) })
+        .eq("id", item.id)
+        .eq("user_id", currentUser.id);
+
+      if (error) {
+        setHistoryStatus("Could not rename this conversation.");
+        return;
+      }
+      item.title = title.trim().slice(0, 90);
+      renderConversationList();
+      setHistoryStatus("Conversation renamed.");
+      return;
+    }
+
+    if (action.trim().toLowerCase() === "d") {
+      if (!confirm("Permanently delete this conversation?")) return;
+      const { error } = await supabaseClient
+        .from("conversations")
+        .delete()
+        .eq("id", item.id)
+        .eq("user_id", currentUser.id);
+
+      if (error) {
+        setHistoryStatus("Could not delete this conversation.");
+        return;
+      }
+
+      savedConversations = savedConversations.filter(chat => chat.id !== item.id);
+      if (conversationId === item.id) {
+        conversationId = null;
+        history = [];
+        messagesEl.innerHTML = "";
+        render("model", "Conversation deleted. Start a new chat whenever you're ready.");
+      }
+      renderConversationList();
+      setHistoryStatus("Conversation deleted.");
+    }
+  }
+
+  document.getElementById("historySearch")?.addEventListener("input", renderConversationList);
+
   async function loadSavedConversation() {
     history = [];
     conversationId = null;
     messagesEl.innerHTML = "";
+    renderConversationList();
 
     const { data, error } = await supabaseClient
       .from("conversations")
@@ -2300,6 +2525,8 @@ To begin: what skill, activity, or type of problem-solving do people already com
     } else if (!conversationId) {
       conversationId = result.data.id;
     }
+
+    await loadConversationList();
   }
 
   async function enterApp(session) {
@@ -2321,6 +2548,7 @@ To begin: what skill, activity, or type of problem-solving do people already com
     accountAction.textContent = "Sign out";
 
     await loadSavedConversation();
+    await loadConversationList();
   }
 
   // SIGN UP AND SIGN IN
