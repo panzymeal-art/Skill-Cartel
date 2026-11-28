@@ -3158,7 +3158,7 @@ To begin: what skill, activity, or type of problem-solving do people already com
         const subtitle = subtitleInput.value.trim();
         const author = authorInput.value.trim() || "Skill Cartel Creator";
         const bodyHtml = markdownToHtml(manuscript);
-        const headings = [...bodyHtml.matchAll(/<h[1-3] id="([^"]+)">([\\s\\S]*?)<\\/h[1-3]>/g)];
+        const headings = [...bodyHtml.matchAll(/<h[1-3] id="([^"]+)">([\s\S]*?)<\/h[1-3]>/g)];
         const toc = headings.length ? headings.map((h, i) => '<li><span>' + h[2] + '</span></li>').join("") : '<li>Manuscript contents</li>';
         const wrapper = document.createElement("div");
         wrapper.innerHTML = '<style>' +
