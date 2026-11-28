@@ -2262,6 +2262,15 @@ To begin: what skill, activity, or type of problem-solving do people already com
   const authSubmit = document.getElementById("authSubmit");
   const accountAction = document.getElementById("accountAction");
 
+  // Bind AI access navigation immediately, before the rest of app initialization.
+  // This keeps the access screen reachable even if a later feature has an initialization error.
+  document.addEventListener("click", event => {
+    const trigger = event.target.closest("[data-open-auth]");
+    if (!trigger) return;
+    event.preventDefault();
+    openAuth();
+  }, true);
+
   function setAuthMessage(message, isError = false) {
     authMessage.textContent = message;
     authMessage.style.color = isError ? "#ffb4a9" : "#f0d79b";
@@ -3354,9 +3363,6 @@ To begin: what skill, activity, or type of problem-solving do people already com
     setAuthMode("signup");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
-  document.querySelectorAll("[data-open-auth]").forEach(button => {
-    button.addEventListener("click", openAuth);
-  });
   document.getElementById("backToWebsite").addEventListener("click", () => {
     authScreen.classList.add("hidden");
     publicSite.classList.remove("hidden");
