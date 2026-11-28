@@ -2732,7 +2732,7 @@ To begin: what skill, activity, or type of problem-solving do people already com
     }
 
     const escapeHtml = value => String(value).replace(/[&<>"']/g, character => ({
-      "\"": "&quot;",
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;"
     }[character]));
 
     const transcript = history.map((message, index) => {
