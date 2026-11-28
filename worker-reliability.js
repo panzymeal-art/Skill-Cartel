@@ -925,6 +925,7 @@ export default {
           ...messages
         ],
         temperature: 0.7,
+        reasoning_effort: "low",
         max_completion_tokens: 2500
       });
 
