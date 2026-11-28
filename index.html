@@ -3548,7 +3548,10 @@ To begin: what skill, activity, or type of problem-solving do people already com
     }
   }, true);
 
-  authForm.addEventListener("submit", async function (event) {
+  // Capture authentication actions before the legacy app's target-level handlers.
+  // This prevents two Supabase clients from starting competing sign-in requests.
+  document.addEventListener("submit", async function (event) {
+    if (event.target !== authForm) return;
     event.preventDefault();
     event.stopImmediatePropagation();
     const email = emailInput.value.trim();
@@ -3587,7 +3590,12 @@ To begin: what skill, activity, or type of problem-solving do people already com
     }
   }, true);
 
-  guestBtn.addEventListener("click", async function (event) {
+  document.addEventListener("click", async function (event) {
+    const target = event.target;
+    const clickedGuest = target && typeof target.closest === "function"
+      ? target.closest("#guestBtn")
+      : null;
+    if (!clickedGuest) return;
     event.preventDefault();
     event.stopImmediatePropagation();
     guestBtn.disabled = true;
