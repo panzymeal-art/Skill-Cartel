@@ -2084,6 +2084,7 @@ h2 { margin:0; font-size:clamp(32px,4vw,52px); line-height:1.1; letter-spacing:-
 
         <div class="actions">
           <button class="ghost" id="exportBtn" title="Download this conversation">Export</button>
+          <button class="ghost" id="exportPdfBtn" title="Print or save this conversation as a PDF">Export PDF</button>
           <button class="ghost" id="clearBtn" title="Clear this conversation">New chat</button>
         </div>
       </div>
@@ -2721,6 +2722,51 @@ To begin: what skill, activity, or type of problem-solving do people already com
     a.click();
 
     URL.revokeObjectURL(url);
+  });
+
+  // EXPORT CONVERSATION AS PDF USING THE BROWSER'S PRINT-TO-PDF FEATURE
+  document.getElementById("exportPdfBtn").addEventListener("click", () => {
+    if (!history.length) {
+      alert("There is no conversation to export yet.");
+      return;
+    }
+
+    const escapeHtml = value => String(value).replace(/[&<>"']/g, character => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;"
+    }[character]));
+
+    const transcript = history.map((message, index) => {
+      const isUser = message.role === "user";
+      const label = isUser ? "YOU" : "SKILL CARTEL";
+      return '<section class="message ' + (isUser ? "user" : "assistant") + '">' +
+        '<h2>' + label + '</h2><div class="message-text">' + escapeHtml(message.text) + '</div></section>';
+    }).join("");
+
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) {
+      alert("Your browser blocked the PDF window. Please allow pop-ups for Skill Cartel and try again.");
+      return;
+    }
+
+    const exportDate = new Date().toLocaleString();
+    printWindow.document.open();
+    printWindow.document.write('<!doctype html><html lang="en"><head><meta charset="utf-8">' +
+      '<meta name="viewport" content="width=device-width,initial-scale=1"><title>Skill Cartel Conversation</title>' +
+      '<style>' +
+      '@page{size:A4;margin:18mm 16mm}*{box-sizing:border-box}body{margin:0;color:#222;font:11pt/1.6 Arial,Helvetica,sans-serif}' +
+      'header{border-bottom:2px solid #b58a3f;padding-bottom:14px;margin-bottom:24px}' +
+      '.brand{font-size:10pt;letter-spacing:3px;color:#9a742f;font-weight:700}.subtitle{font-size:21pt;font-weight:700;margin:9px 0 4px}' +
+      '.date{font-size:9pt;color:#666}.message{margin:0 0 20px;padding:0 0 14px;border-bottom:1px solid #ddd;break-inside:auto}' +
+      '.message h2{font-size:9pt;letter-spacing:1.5px;margin:0 0 7px;color:#9a742f}.message.user h2{color:#555}' +
+      '.message-text{white-space:pre-wrap;overflow-wrap:anywhere;font-size:10.5pt}' +
+      'footer{margin-top:28px;padding-top:10px;border-top:1px solid #ddd;color:#777;font-size:8pt}' +
+      '@media screen{body{max-width:800px;margin:30px auto;padding:30px;background:#fff;box-shadow:0 2px 20px #0002}}' +
+      '@media print{a{color:inherit;text-decoration:none}}' +
+      '</style></head><body><header><div class="brand">SKILL CARTEL</div>' +
+      '<div class="subtitle">Conversation Transcript</div><div class="date">Exported: ' + escapeHtml(exportDate) + '</div></header>' +
+      transcript + '<footer>Generated locally by Skill Cartel. Your conversation content is not uploaded to a PDF conversion service.</footer>' +
+      '<script>window.onload=function(){window.focus();window.print();};' + '</' + 'script></body></html>');
+    printWindow.document.close();
   });
 
   // INITIALIZE SUPABASE
