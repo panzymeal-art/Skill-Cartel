@@ -3476,6 +3476,21 @@ To begin: what skill, activity, or type of problem-solving do people already com
 /* Independent authentication controller: keeps auth usable if the main app has an initialization problem. */
 (function () {
   const authScreen = document.getElementById("authScreen");
+  const publicSite = document.getElementById("publicSite");
+
+  // Keep AI Access navigation independent from the main application script.
+  document.addEventListener("click", function (event) {
+    const target = event.target;
+    const trigger = target && typeof target.closest === "function"
+      ? target.closest("[data-open-auth]")
+      : null;
+    if (!trigger) return;
+    event.preventDefault();
+    if (publicSite) publicSite.classList.add("hidden");
+    if (authScreen) authScreen.classList.remove("hidden");
+    window.scrollTo(0, 0);
+  }, true);
+
   const authForm = document.getElementById("authForm");
   const authSubmit = document.getElementById("authSubmit");
   const authMessage = document.getElementById("authMessage");
